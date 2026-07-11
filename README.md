@@ -84,20 +84,6 @@ Pour choisir un autre nom ou un dépôt privé :
 
 Chaque futur `git push` déclenchera alors automatiquement un nouveau déploiement.
 
-##  
-
-Le dépôt est préparé pour une  :
-
-- les adresses IP utilisent le réseau d’exemple `192.168.1.0/24` ;
-- les adresses MAC et Device ID sont masqués dans les captures ;
-- le nom d’utilisateur Windows est remplacé par `user` ;
-- aucun SSID, mot de passe ou secret n’est inclus ;
-- le dashboard publié est limité aux éléments piscine utiles au guide ;
-- les  des images ont été supprimées ;
-- les scripts acceptent l’adresse du Waveshare par argument ou variable d’environnement.
-
-Matériel et date de validation : **Syclope HydroTouch CHY0444**, **Waveshare firmware V1.452**, **11 juillet 2026**. Les détails sont consignés dans [`PUBLICATION.md`](PUBLICATION.md).
-
 ## Avertissement de sécurité
 
 Cette documentation décrit une expérience réelle, mais elle ne remplace ni la notice constructeur ni l’intervention d’un professionnel qualifié. Le montage combine secteur 230 V, basse tension, produits chimiques et pompes de dosage. Toute intervention doit être réalisée hors tension, avec les protections et méthodes adaptées. L’intégration Home Assistant présentée est volontairement **en lecture seule**.
