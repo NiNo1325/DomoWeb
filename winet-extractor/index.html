@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurer deux onduleurs Sungrow dans Home Assistant avec WiNet Extractor</title>
+  <meta name="description" content="Guide pas à pas : faire tourner deux instances de l'add-on WiNet Extractor via MQTT pour superviser deux onduleurs Sungrow dans Home Assistant." />
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/enhance.js" defer></script>
+</head>
+<body>
+<main>
+<header id="title-block-header">
+<h1 class="title">Configurer deux onduleurs Sungrow dans Home Assistant avec WiNet Extractor</h1>
+<p class="subtitle">Faire tourner deux instances de l'add-on WiNet Extractor via MQTT pour superviser deux onduleurs Sungrow — guide pas à pas.</p>
+<p class="date">Nicolas · 12 août 2025</p>
+</header>
+
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduction">1. Introduction à WiNet Extractor</a></li>
+<li><a href="#prerequis">2. Prérequis et préparation</a></li>
+<li><a href="#telecharger">3. Télécharger WiNet Extractor depuis GitHub</a></li>
+<li><a href="#samba">4. Installer Samba Share pour transférer un dossier complet</a></li>
+<li><a href="#depot-local">5. Ajouter WiNet Extractor comme dépôt local</a></li>
+<li><a href="#premiere-instance">6. Installer et configurer la première instance</a></li>
+<li><a href="#seconde-instance">7. Installer et configurer la seconde instance</a></li>
+<li><a href="#energie">8. Ajouter les capteurs au tableau de bord Énergie</a></li>
+<li><a href="#depannage">9. Dépannage</a></li>
+</ul>
+</nav>
+
+<blockquote>
+<p><strong>Retour d'expérience.</strong> Deux onduleurs Sungrow supervisés dans Home Assistant en faisant tourner <strong>deux instances</strong> de l'add-on WiNet Extractor, chacune pointant vers un WiNet&nbsp;S / S2 distinct et publiant ses mesures via <strong>MQTT</strong>. Résultat&nbsp;: production instantanée, journalière et totale des deux onduleurs, intégrées au tableau de bord Énergie.</p>
+</blockquote>
+
+<h1 id="introduction">1. Introduction à WiNet Extractor</h1>
+<p>WiNet Extractor est un add-on Home Assistant conçu pour récupérer les données des onduleurs Sungrow <strong>WiNet&nbsp;S / WiNet&nbsp;S2</strong>.</p>
+<p>Il permet de&nbsp;:</p>
+<ul>
+<li>lire la <strong>puissance instantanée</strong> de l'onduleur&nbsp;;</li>
+<li>suivre la <strong>production journalière</strong> et <strong>totale</strong>&nbsp;;</li>
+<li>afficher des valeurs utiles&nbsp;: tension, courant, température interne.</li>
+</ul>
+<p>Dans ce scénario, l'objectif est d'installer <strong>deux</strong> instances de WiNet Extractor afin de superviser deux onduleurs distincts.</p>
+
+<h1 id="prerequis">2. Prérequis et préparation</h1>
+<p>Avant de commencer, assurez-vous de disposer&nbsp;:</p>
+<ul>
+<li>d'une installation <strong>Home Assistant</strong> fonctionnelle (dernière version recommandée)&nbsp;;</li>
+<li>de l'accès à l'interface <strong>Supervisor</strong> (pour installer des add-ons)&nbsp;;</li>
+<li>de l'adresse IP et des identifiants de vos onduleurs Sungrow&nbsp;;</li>
+<li>d'un ordinateur connecté au même réseau local que Home Assistant&nbsp;;</li>
+<li>de l'accès à la <strong>boutique d'add-ons</strong> et aux <strong>Paramètres</strong> de Home Assistant.</li>
+</ul>
+
+<h1 id="telecharger">3. Télécharger WiNet Extractor depuis GitHub</h1>
+<ol>
+<li>Rendez-vous sur le dépôt GitHub officiel <strong>NickStallman/home-assistant-repo</strong> (merci au développeur pour sa contribution).</li>
+<li>Cliquez sur <strong>Code → Download ZIP</strong>.</li>
+<li>Décompressez le fichier ZIP sur votre ordinateur.</li>
+<li>À l'intérieur, repérez le dossier <code>winet-extractor</code> — c'est ce dossier qu'il faut transférer vers Home Assistant.</li>
+</ol>
+<blockquote>
+<p><strong>Conseil.</strong> Conservez une copie du ZIP au cas où une réinstallation serait nécessaire plus tard.</p>
+</blockquote>
+
+<h1 id="samba">4. Installer Samba Share pour transférer un dossier complet</h1>
+<p>L'éditeur de fichiers intégré à Home Assistant ne permet pas de téléverser des dossiers directement. <strong>Samba Share</strong> permet d'accéder aux fichiers de Home Assistant depuis l'explorateur de fichiers de votre PC.</p>
+<ol>
+<li>Dans Home Assistant, ouvrez la <strong>boutique d'add-ons</strong>, cherchez <strong>Samba Share</strong> et installez-le.</li>
+<li>Configurez un nom d'utilisateur et un mot de passe, puis démarrez l'add-on.</li>
+<li>Sous Windows, ouvrez l'Explorateur de fichiers et saisissez <code>\\IP_DE_HOME_ASSISTANT\config</code> (avec vos identifiants).</li>
+<li>Ouvrez le dossier <code>addons</code> (créez-le s'il n'existe pas).</li>
+<li>Glissez-déposez le dossier <code>winet-extractor</code> dans <code>/addons/</code>.</li>
+</ol>
+<blockquote>
+<p><strong>Conseil.</strong> Si l'add-on File Editor n'affiche pas <code>/addons</code>, ajoutez ce chemin dans <code>allowlist_external_dirs</code> puis redémarrez l'éditeur.</p>
+</blockquote>
+
+<h1 id="depot-local">5. Ajouter WiNet Extractor comme dépôt local dans Home Assistant</h1>
+<ul>
+<li>Dans <code>/addons</code> sur Home Assistant, créez un nouveau dossier si nécessaire.</li>
+<li>Renommez le dossier <code>winet-extractor</code> en <code>winet-extractor2</code>.</li>
+<li>Glissez-déposez le dossier <code>winet-extractor2</code> dans <code>/addons</code>.</li>
+<li>Ouvrez le fichier <code>config.yaml</code> dans <code>winet-extractor2</code> et modifiez&nbsp;:
+<ul>
+<li><code>name:</code> → <code>Winet Extractor 2</code>&nbsp;;</li>
+<li><code>slug:</code> → <code>winet-extractor2</code>.</li>
+</ul>
+</li>
+<li>Dans Home Assistant, allez dans <strong>Paramètres → Add-ons → Dépôts</strong> et actualisez (via le menu en haut à droite).</li>
+</ul>
+<p>Le changement de <code>name</code> et de <code>slug</code> est important&nbsp;: il indique à Home Assistant qu'il s'agit de <strong>deux modules distincts</strong>.</p>
+
+<h1 id="premiere-instance">6. Installer et configurer la première instance</h1>
+<ol>
+<li>Installez le WiNet Extractor original (depuis le dépôt standard — <strong>pas</strong> celui créé localement).</li>
+<li>Réglez les options&nbsp;:
+<ul>
+<li><code>WINET_HOST</code> = IP du WiNet de l'onduleur n°1 (à trouver dans votre routeur)&nbsp;;</li>
+<li><code>MQTT_URL</code> = <code>mqtt://localhost</code> (ou l'adresse de votre broker)&nbsp;;</li>
+<li><code>WINET_USER</code> / <code>WINET_PASS</code> = identifiants admin du WiNet.</li>
+</ul>
+</li>
+<li>Démarrez l'add-on.</li>
+</ol>
+
+<h1 id="seconde-instance">7. Installer et configurer la seconde instance</h1>
+<ol>
+<li>Ouvrez <strong>« WiNet Extractor 2 »</strong> dans la boutique d'add-ons (l'add-on local, en haut de l'écran).</li>
+<li>Installez-le, puis configurez-le avec les valeurs du second onduleur&nbsp;:
+<ul>
+<li><code>WINET_HOST</code> = IP du WiNet de l'onduleur n°2&nbsp;;</li>
+<li>mêmes <code>MQTT_URL</code> et identifiants que ci-dessus.</li>
+</ul>
+</li>
+<li>Démarrez l'add-on.</li>
+</ol>
+<blockquote>
+<p><strong>Optionnel.</strong> Pour bien séparer les topics, définissez des préfixes de topic ou des <em>client IDs</em> différents dans chaque instance (si votre version le permet). Pour la journalisation, l'auteur a créé deux utilisateurs MQTT (un par instance), mais c'est facultatif.</p>
+</blockquote>
+
+<h1 id="energie">8. Ajouter les capteurs au tableau de bord Énergie</h1>
+<ol>
+<li>Ouvrez votre <strong>tableau de bord Énergie</strong> (menu en haut à droite pour configurer les capteurs).</li>
+<li>Sous <strong>Panneaux solaires</strong>, ajoutez l'entité <strong>Production totale</strong> (<em>Total Yield</em>) de l'onduleur n°1.</li>
+<li>Répétez l'opération pour l'onduleur n°2.</li>
+</ol>
+<blockquote>
+<p><strong>Pourquoi la production totale et pas la journalière&nbsp;?</strong> Le tableau de bord Énergie attend un compteur cumulatif (<code>state_class: total_increasing</code>). La production journalière se remet à zéro chaque jour et ne convient pas aux graphiques de long terme.</p>
+</blockquote>
+<p>La section Solaire apparaît alors dans le tableau de bord Énergie avec les deux onduleurs. Si votre installation dispose d'une vue de consommation globale (par exemple via un <strong>Shelly&nbsp;3EM&nbsp;Pro</strong>), elle calcule automatiquement l'autoconsommation et les indicateurs d'autosuffisance.</p>
+
+<h1 id="depannage">9. Dépannage</h1>
+<ul>
+<li><strong>L'add-on local n'apparaît pas&nbsp;:</strong> vérifiez que <code>config.yaml</code> possède un <code>slug</code> unique et que le dossier se trouve directement sous <code>/addons/</code>.</li>
+<li><strong>Erreur d'installation&nbsp;:</strong> assurez-vous que tous les fichiers (<code>Dockerfile</code>, scripts) du dossier <code>winet-extractor</code> original ont bien été copiés.</li>
+<li><strong>Aucune donnée&nbsp;:</strong> vérifiez l'IP et les identifiants du WiNet, et confirmez que votre broker MQTT fonctionne.</li>
+</ul>
+
+<hr />
+<p><strong>Voir aussi&nbsp;:</strong> <a href="../">Syclope HydroTouch CHY0444 dans Home Assistant</a>.</p>
+<p class="footnotes">D'après l'article original publié sur <a href="https://medium.com/@nicodomo/configure-two-sungrow-inverters-in-home-assistant-with-winet-extractor-step-by-step-guide-388766f88bbb">Medium</a>. Add-on WiNet Extractor&nbsp;: <a href="https://github.com/NickStallman/home-assistant-repo">NickStallman/home-assistant-repo</a>. Mots-clés&nbsp;: domotique, onduleur, Sungrow, Home Assistant, énergie solaire.</p>
+
+</main>
+</body>
+</html>
