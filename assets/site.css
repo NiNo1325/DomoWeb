@@ -1,72 +1,241 @@
-:root {
-  --bg: #f7f9fc;
-  --surface: #ffffff;
-  --ink: #172033;
-  --muted: #5f6b7a;
-  --line: #d9e0e8;
-  --accent: #007b8a;
-  --accent-soft: #e6f5f7;
-  --warn: #a15c00;
-  --danger: #b42318;
-  --code: #101827;
+/* ============================================================================
+   Charte « Rapport d'ingénierie » — style pérenne des publications techniques.
+   Serif Charter + libellés sans-serif · accent bleu-plan · filets fins ·
+   numéros de section suspendus · tableaux booktabs · figures numérotées.
+   Conçu pour du HTML Pandoc (sections en <h1>, sous-sections en <h2>).
+   ========================================================================== */
+
+:root{
+  --paper:#ffffff;
+  --desk:#eceef1;
+  --ink:#16202b;
+  --mut:#5a6b7b;
+  --line:#d7dee6;
+  --line-soft:#e9eef3;
+  --accent:#1f4e79;
+  --accent-soft:#eaf1f8;
+  --code-bg:#f6f8fa;
+  --code-inline:#eef2f6;
+
+  --serif:"Charter","Bitstream Charter","Cambria",Georgia,"Times New Roman",serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+
+  --measure:900px;
 }
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  color: var(--ink);
-  background: var(--bg);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.65;
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--desk);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:18px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
-body > header, body > nav, body > main, body > footer, body > .container { max-width: 1120px; margin: auto; }
-body > header { padding: 48px 28px 22px; }
-h1 { font-size: clamp(2.2rem, 5vw, 4.1rem); line-height: 1.04; letter-spacing: -0.04em; margin: 0 0 16px; }
-h2 { margin-top: 2.7em; padding-top: .4em; border-top: 1px solid var(--line); font-size: 2rem; }
-h3 { margin-top: 2em; font-size: 1.35rem; }
-h4 { margin-top: 1.6em; }
-p, li { max-width: 85ch; }
-a { color: #006d7a; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-nav#TOC {
-  margin: 16px auto 38px;
-  padding: 20px 28px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  columns: 2;
-  column-gap: 40px;
+::selection{ background:var(--accent-soft); }
+
+/* ---- feuille (sheet) : la publication posée sur le "bureau" ---------------- */
+main{
+  counter-reset:figure;
+  max-width:var(--measure);
+  margin:clamp(0px,4vw,44px) auto;
+  background:var(--paper);
+  box-shadow:0 14px 44px rgba(20,30,45,.10);
+  padding:clamp(30px,6vw,72px) clamp(24px,6vw,84px);
 }
-nav#TOC ul { margin: 0; padding-left: 1.2em; }
-nav#TOC li { break-inside: avoid; margin: .25em 0; }
-main, body > section, body > div#content { max-width: 1120px; margin: auto; padding: 0 28px 80px; }
-blockquote {
-  margin: 28px 0;
-  padding: 18px 22px;
-  border-left: 5px solid var(--accent);
-  border-radius: 10px;
-  background: var(--accent-soft);
+
+/* ---- bloc-titre ----------------------------------------------------------- */
+#title-block-header{ margin:0 0 2.6em; }
+h1.title{
+  font-size:clamp(2rem,4.6vw,2.85rem);
+  font-weight:700;
+  line-height:1.08;
+  letter-spacing:-.02em;
+  margin:0 0 .35em;
+  padding-bottom:.35em;
+  border-bottom:2px solid var(--accent);
+  text-wrap:balance;
 }
-img { display: block; max-width: 100%; height: auto; margin: 22px auto; border-radius: 14px; box-shadow: 0 12px 34px rgba(31,41,55,.12); }
-img[src$=".svg"] { box-shadow: none; background: white; border: 1px solid var(--line); }
-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; background: var(--surface); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(31,41,55,.06); }
-th, td { border: 1px solid var(--line); padding: 10px 12px; vertical-align: top; text-align: left; }
-th { background: #edf2f7; }
-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #edf1f5; border-radius: 5px; padding: .12em .35em; }
-pre { overflow: auto; padding: 18px 20px; border-radius: 14px; background: var(--code); color: #e8eef7; box-shadow: 0 10px 28px rgba(16,24,39,.18); }
-pre code { color: inherit; background: transparent; padding: 0; }
-hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
-.footnotes { font-size: .93rem; color: var(--muted); }
-.task-list-item { list-style: none; }
-.task-list-item input { margin-left: -1.5em; }
-@media (max-width: 800px) {
-  nav#TOC { columns: 1; margin-left: 14px; margin-right: 14px; }
-  body > header, main, body > section, body > div#content { padding-left: 18px; padding-right: 18px; }
-  table { display: block; overflow-x: auto; white-space: nowrap; }
-  h2 { font-size: 1.55rem; }
+.subtitle{ color:var(--mut); font-size:1.12rem; font-style:italic; margin:.55em 0 .9em; }
+.date{ font-family:var(--sans); font-size:.85rem; letter-spacing:.02em; color:var(--mut); margin:0; }
+
+/* ---- sommaire ------------------------------------------------------------- */
+nav#TOC{
+  margin:0 0 3em;
+  padding:22px 26px 18px;
+  background:#fafbfc;
+  border:1px solid var(--line);
+  border-radius:8px;
 }
-@media print {
-  body { background: white; font-size: 10.5pt; }
-  nav#TOC { columns: 2; box-shadow: none; }
-  pre { white-space: pre-wrap; }
-  a { color: black; }
+nav#TOC::before{
+  content:"Sommaire";
+  display:block;
+  font-family:var(--sans);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-size:.7rem;
+  font-weight:600;
+  color:var(--accent);
+  margin-bottom:.9em;
 }
+nav#TOC > ul{ columns:2; column-gap:44px; }
+nav#TOC ul{ margin:0; padding-left:1.15em; list-style:none; }
+nav#TOC > ul{ padding-left:0; }
+nav#TOC ul ul{ padding-left:1em; }
+nav#TOC li{ break-inside:avoid; margin:.26em 0; font-size:.94rem; }
+nav#TOC a{ text-decoration:none; }
+nav#TOC a:hover{ text-decoration:underline; }
+
+/* ---- titres de section ---------------------------------------------------- */
+main > h1, main > h2{ display:flex; gap:.55em; align-items:baseline; text-wrap:balance; }
+main > h1{
+  margin:2.6em 0 .7em;
+  font-size:clamp(1.55rem,3.4vw,2.05rem);
+  font-weight:650;
+  line-height:1.14;
+  letter-spacing:-.015em;
+  padding-bottom:.28em;
+  border-bottom:2px solid var(--accent);
+  scroll-margin-top:1rem;
+}
+main > h2{
+  margin:2em 0 .55em;
+  font-size:1.38rem;
+  font-weight:650;
+  line-height:1.2;
+  scroll-margin-top:1rem;
+}
+h3{ margin:1.7em 0 .45em; font-size:1.12rem; font-weight:650; color:var(--accent); }
+h4{ margin:1.4em 0 .4em; font-size:1rem; font-weight:650; }
+
+.secno{
+  flex:0 0 auto;
+  font-family:var(--sans);
+  font-weight:600;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+main > h1 .secno{ font-size:.78em; }
+main > h2 .secno{ font-size:.82em; }
+
+/* ---- corps ---------------------------------------------------------------- */
+p{ margin:0 0 1.05em; }
+p, li{ max-width:78ch; }
+a{ color:var(--accent); text-decoration:underline; text-decoration-thickness:.6px; text-underline-offset:2px; }
+a:hover{ text-decoration-thickness:1.3px; }
+strong{ font-weight:650; }
+ul, ol{ margin:0 0 1.05em; padding-left:1.4em; }
+li{ margin:.3em 0; }
+li::marker{ color:var(--mut); }
+hr{ border:0; border-top:1px solid var(--line); margin:2.6em 0; }
+
+/* ---- appels & notes (blockquote) ----------------------------------------- */
+blockquote{
+  margin:1.7em 0;
+  padding:.85em 1.25em;
+  border-left:3px solid var(--accent);
+  background:var(--accent-soft);
+  border-radius:0 6px 6px 0;
+  color:#1d2c3a;
+}
+blockquote p:last-child{ margin-bottom:0; }
+
+/* ---- figures (numérotation auto « Figure N ») ---------------------------- */
+figure{ counter-increment:figure; margin:1.9em 0; }
+figure img, figure svg{ display:block; width:100%; height:auto;
+  border:1px solid var(--line); border-radius:6px; background:var(--paper); }
+figcaption{
+  font-family:var(--sans);
+  font-size:.85rem;
+  line-height:1.5;
+  color:var(--mut);
+  margin-top:.75em;
+  padding-left:.05em;
+}
+figcaption::before{
+  content:"Figure " counter(figure) " — ";
+  font-weight:600;
+  color:var(--accent);
+}
+img{ max-width:100%; height:auto; }
+
+/* ---- tableaux (booktabs) -------------------------------------------------- */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:1.7em 0;
+  font-size:.95rem;
+  font-variant-numeric:tabular-nums;
+  border-top:1.5px solid var(--ink);
+}
+th, td{ padding:.52em .8em; text-align:left; vertical-align:top; }
+thead th{
+  font-family:var(--sans);
+  font-weight:600;
+  font-size:.8rem;
+  letter-spacing:.02em;
+  color:var(--accent);
+  border-bottom:2px solid var(--accent);
+}
+tbody td{ border-bottom:1px solid var(--line-soft); }
+tbody tr:last-child td{ border-bottom:1.5px solid var(--ink); }
+
+/* ---- code ----------------------------------------------------------------- */
+code{ font-family:var(--mono); font-size:.86em; background:var(--code-inline);
+  padding:.1em .36em; border-radius:4px; }
+pre{
+  margin:1.5em 0;
+  overflow-x:auto;
+  padding:1em 1.15em;
+  background:var(--code-bg);
+  border:1px solid var(--line);
+  border-radius:6px;
+  font-family:var(--mono);
+  font-size:.85rem;
+  line-height:1.55;
+  color:var(--ink);
+}
+pre code{ background:none; padding:0; font-size:inherit; color:inherit; }
+div.sourceCode{ margin:1.5em 0; }
+div.sourceCode pre{ margin:0; }
+
+/* ---- notes de bas de page ------------------------------------------------- */
+.footnotes{
+  margin-top:3.2em;
+  padding-top:1em;
+  border-top:1px solid var(--line);
+  font-size:.9rem;
+  color:var(--mut);
+}
+.footnotes hr{ display:none; }
+
+/* ---- listes de tâches ----------------------------------------------------- */
+.task-list-item{ list-style:none; }
+.task-list-item input{ margin:0 .5em 0 -1.4em; }
+
+/* ---- responsive ----------------------------------------------------------- */
+@media (max-width:720px){
+  body{ background:var(--paper); }
+  main{ margin:0; box-shadow:none; padding-left:20px; padding-right:20px; }
+  nav#TOC > ul{ columns:1; }
+  main > h1{ font-size:1.5rem; }
+  main > h2{ font-size:1.24rem; }
+  table{ display:block; overflow-x:auto; white-space:nowrap; }
+}
+
+/* ---- impression ----------------------------------------------------------- */
+@media print{
+  body{ background:#fff; font-size:11pt; }
+  main{ max-width:none; margin:0; box-shadow:none; padding:0; }
+  a{ color:var(--ink); }
+  nav#TOC{ break-after:page; }
+  main > h1{ break-after:avoid; }
+  figure, table, pre{ break-inside:avoid; }
+}
+
+@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
