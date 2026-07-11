@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+<style>
+  .box{fill:#fff;stroke:#111827;stroke-width:2;rx:16}
+  .t{font:700 22px system-ui,sans-serif;fill:#111827}
+  .s{font:17px system-ui,sans-serif;fill:#374151}
+  .pin{font:700 17px ui-monospace,monospace;fill:#111827}
+  .line{stroke-width:5;fill:none}
+  .note{font:15px system-ui,sans-serif;fill:#4b5563}
+</style>
+<rect width="1400" height="760" fill="#f8fafc"/>
+<text class="t" x="700" y="48" text-anchor="middle">Schéma de câblage validé</text>
+
+<rect class="box" x="60" y="100" width="300" height="250"/>
+<text class="t" x="210" y="145" text-anchor="middle">Secteur / coffret</text>
+<text class="pin" x="100" y="210">L / phase vérifiée</text>
+<text class="pin" x="100" y="270">N / conducteur retour</text>
+<text class="note" x="90" y="320">En 3×230 V sans neutre :</text>
+<text class="note" x="90" y="342">ne jamais se fier à la couleur seule.</text>
+
+<rect class="box" x="500" y="80" width="300" height="300"/>
+<text class="t" x="650" y="125" text-anchor="middle">Alimentation DIN 12 V</text>
+<text class="pin" x="545" y="195">Entrée : L</text>
+<text class="pin" x="545" y="250">Entrée : N</text>
+<text class="pin" x="545" y="315">Sortie : +V</text>
+<text class="pin" x="675" y="315">Sortie : −V</text>
+
+<rect class="box" x="980" y="75" width="330" height="320"/>
+<text class="t" x="1145" y="120" text-anchor="middle">Waveshare</text>
+<text class="pin" x="1020" y="190">VCC</text>
+<text class="pin" x="1020" y="245">GND</text>
+<text class="pin" x="1020" y="315">TA (RS485 + / A)</text>
+<text class="pin" x="1020" y="360">TB (RS485 − / B)</text>
+
+<rect class="box" x="500" y="500" width="300" height="180"/>
+<text class="t" x="650" y="545" text-anchor="middle">Syclope RS485</text>
+<text class="pin" x="555" y="600">A</text>
+<text class="pin" x="650" y="600">B</text>
+<text class="pin" x="745" y="600">C</text>
+<text class="note" x="650" y="645" text-anchor="middle">A/B sur une même paire torsadée</text>
+
+<path class="line" stroke="#92400e" d="M360 195 H500"/>
+<path class="line" stroke="#2563eb" d="M360 255 H500"/>
+<path class="line" stroke="#dc2626" d="M800 305 H980 V185"/>
+<path class="line" stroke="#111827" d="M800 340 H920 V240 H980"/>
+<path class="line" stroke="#7c3aed" d="M1020 310 H900 V600 H575"/>
+<path class="line" stroke="#0ea5e9" d="M1020 355 H870 V600 H670"/>
+<path class="line" stroke="#6b7280" stroke-dasharray="12 10" d="M1020 240 H840 V600 H765"/>
+
+<text class="note" x="440" y="180" text-anchor="middle">230 V AC</text>
+<text class="note" x="890" y="288" text-anchor="middle">+12 V</text>
+<text class="note" x="885" y="330" text-anchor="middle">0 V</text>
+<text class="note" x="860" y="575" text-anchor="middle">C → GND : recommandé par la notice,</text>
+<text class="note" x="860" y="596" text-anchor="middle">mais A/B seuls ont fonctionné sur la courte liaison testée.</text>
+
+<rect x="55" y="700" width="1290" height="42" rx="12" fill="#fee2e2" stroke="#dc2626"/>
+<text class="s" x="700" y="727" text-anchor="middle">Couper, consigner et vérifier l’absence de tension avant toute intervention dans le coffret.</text>
+</svg>

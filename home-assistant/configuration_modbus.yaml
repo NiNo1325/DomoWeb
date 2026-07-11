@@ -1,0 +1,33 @@
+modbus:
+  - name: syclope_hydrotouch
+    type: rtuovertcp
+    # Adresse d'exemple : remplacez-la par l'IP réservée de votre Waveshare.
+    host: 192.168.1.200
+    port: 4196
+    timeout: 5
+    message_wait_milliseconds: 100
+
+    sensors:
+      - name: "Syclope pH"
+        unique_id: syclope_ph
+        slave: 1
+        address: 1202
+        input_type: holding
+        data_type: float32
+        swap: word
+        precision: 2
+        scan_interval: 15
+        state_class: measurement
+        unit_of_measurement: "pH"
+
+      - name: "Syclope Redox"
+        unique_id: syclope_redox
+        slave: 1
+        address: 1302
+        input_type: holding
+        data_type: float32
+        swap: word
+        precision: 0
+        scan_interval: 15
+        state_class: measurement
+        unit_of_measurement: "mV"

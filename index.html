@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Syclope HydroTouch CHY0444 dans Home Assistant</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="assets/site.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Syclope HydroTouch CHY0444 dans Home Assistant</h1>
+<p class="subtitle">Guide complet : alimentation, RS485, Waveshare
+Ethernet, rétro‑ingénierie Modbus et dashboard Mushroom</p>
+<p class="date">11 juillet 2026 —  1.1</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#résultat-final" id="toc-résultat-final">1. Résultat
+final</a>
+<ul>
+<li><a href="#ce-qui-est-confirmé-et-ce-qui-ne-lest-pas"
+id="toc-ce-qui-est-confirmé-et-ce-qui-ne-lest-pas">Ce qui est confirmé,
+et ce qui ne l’est pas</a></li>
+</ul></li>
+<li><a href="#sécurité-et-limites" id="toc-sécurité-et-limites">2.
+Sécurité et limites</a>
+<ul>
+<li><a href="#règles-impératives" id="toc-règles-impératives">Règles
+impératives</a></li>
+</ul></li>
+<li><a href="#matériel-utilisé" id="toc-matériel-utilisé">3. Matériel
+utilisé</a>
+<ul>
+<li><a href="#équipements-principaux"
+id="toc-équipements-principaux">Équipements principaux</a></li>
+</ul></li>
+<li><a href="#schéma-de-câblage" id="toc-schéma-de-câblage">4. Schéma de
+câblage</a>
+<ul>
+<li><a href="#alimentation-230-v-12-v-dc"
+id="toc-alimentation-230-v-12-v-dc">4.1 Alimentation 230 V → 12 V
+DC</a></li>
+<li><a href="#raccordement-rs485-côté-syclope"
+id="toc-raccordement-rs485-côté-syclope">4.2 Raccordement RS485 côté
+Syclope</a></li>
+<li><a href="#choix-du-câble" id="toc-choix-du-câble">4.3 Choix du
+câble</a></li>
+<li><a href="#ethernet" id="toc-ethernet">4.4 Ethernet</a></li>
+</ul></li>
+<li><a href="#première-boucle-de-vérification-matériel"
+id="toc-première-boucle-de-vérification-matériel">5. Première boucle de
+vérification : matériel</a></li>
+<li><a href="#paramétrage-du-syclope" id="toc-paramétrage-du-syclope">6.
+Paramétrage du Syclope</a></li>
+<li><a href="#configuration-du-waveshare"
+id="toc-configuration-du-waveshare">7. Configuration du Waveshare</a>
+<ul>
+<li><a href="#découverte-avec-vircom"
+id="toc-découverte-avec-vircom">7.1 Découverte avec VirCom</a>
+<ul>
+<li><a href="#pourquoi-arp--a-nétait-pas-concluant"
+id="toc-pourquoi-arp--a-nétait-pas-concluant">Pourquoi
+<code>arp -a</code> n’était pas concluant</a></li>
+</ul></li>
+<li><a href="#paramètres-réseau-validés"
+id="toc-paramètres-réseau-validés">7.2 Paramètres réseau
+validés</a></li>
+<li><a href="#paramètres-série" id="toc-paramètres-série">7.3 Paramètres
+série</a></li>
+</ul></li>
+<li><a href="#deuxième-boucle-de-vérification-réseau"
+id="toc-deuxième-boucle-de-vérification-réseau">8. Deuxième boucle de
+vérification : réseau</a>
+<ul>
+<li><a href="#en-cas-dappareil-introuvable"
+id="toc-en-cas-dappareil-introuvable">En cas d’appareil
+introuvable</a></li>
+</ul></li>
+<li><a href="#validation-avec-modbus-poll"
+id="toc-validation-avec-modbus-poll">9. Validation avec Modbus Poll</a>
+<ul>
+<li><a href="#connexion" id="toc-connexion">9.1 Connexion</a></li>
+<li><a href="#première-lecture" id="toc-première-lecture">9.2 Première
+lecture</a></li>
+<li><a href="#test-de-la-fonction-04"
+id="toc-test-de-la-fonction-04">9.3 Test de la fonction 04</a></li>
+</ul></li>
+<li><a href="#rétro-ingénierie-de-la-cartographie-modbus"
+id="toc-rétro-ingénierie-de-la-cartographie-modbus">10. Rétro-ingénierie
+de la cartographie Modbus</a>
+<ul>
+<li><a href="#premier-échec-python-modbus-tcp-classique"
+id="toc-premier-échec-python-modbus-tcp-classique">10.1 Premier échec
+Python : Modbus TCP classique</a></li>
+<li><a href="#correction-framer-rtu" id="toc-correction-framer-rtu">10.2
+Correction : framer RTU</a></li>
+<li><a href="#scan-des-registres" id="toc-scan-des-registres">10.3 Scan
+des registres</a></li>
+<li><a href="#comprendre-ladressage" id="toc-comprendre-ladressage">10.4
+Comprendre l’adressage</a></li>
+<li><a href="#comprendre-le-float32-cdab"
+id="toc-comprendre-le-float32-cdab">10.5 Comprendre le float32
+CDAB</a></li>
+</ul></li>
+<li><a href="#registres-identifiés" id="toc-registres-identifiés">11.
+Registres identifiés</a>
+<ul>
+<li><a href="#registres-confirmés"
+id="toc-registres-confirmés">Registres confirmés</a></li>
+<li><a href="#candidats-solides-mais-non-validés-par-modification"
+id="toc-candidats-solides-mais-non-validés-par-modification">Candidats
+solides mais non validés par modification</a></li>
+</ul></li>
+<li><a href="#script-de-test-minimal"
+id="toc-script-de-test-minimal">12. Script de test minimal</a></li>
+<li><a href="#intégration-dans-home-assistant"
+id="toc-intégration-dans-home-assistant">13. Intégration dans Home
+Assistant</a>
+<ul>
+<li><a href="#pourquoi-il-ny-a-pas-icon"
+id="toc-pourquoi-il-ny-a-pas-icon">Pourquoi il n’y a pas
+<code>icon:</code></a></li>
+</ul></li>
+<li><a href="#troisième-boucle-de-vérification-home-assistant"
+id="toc-troisième-boucle-de-vérification-home-assistant">14. Troisième
+boucle de vérification : Home Assistant</a></li>
+<li><a href="#carte-mushroom-avec-zones-de-couleur"
+id="toc-carte-mushroom-avec-zones-de-couleur">15. Carte Mushroom avec
+zones de couleur</a>
+<ul>
+<li><a href="#ph" id="toc-ph">pH</a></li>
+<li><a href="#redox" id="toc-redox">Redox</a></li>
+</ul></li>
+<li><a href="#dépannage" id="toc-dépannage">16. Dépannage</a></li>
+<li><a href="#fiabilisation-pour-une-installation-durable"
+id="toc-fiabilisation-pour-une-installation-durable">17. Fiabilisation
+pour une installation durable</a>
+<ul>
+<li><a href="#réseau" id="toc-réseau">Réseau</a></li>
+<li><a href="#électricité" id="toc-électricité">Électricité</a></li>
+<li><a href="#modbus" id="toc-modbus">Modbus</a></li>
+<li><a href="#entretien-de-la-mesure"
+id="toc-entretien-de-la-mesure">Entretien de la mesure</a></li>
+</ul></li>
+<li><a href="#publication-publique-et--appliquée"
+id="toc-publication-publique-et--appliquée">18. Publication
+publique et  appliquée</a>
+<ul>
+<li><a href="#mesures-de--appliquées"
+id="toc-mesures-de--appliquées">Mesures de
+ appliquées</a></li>
+<li><a href="#transparence-technique"
+id="toc-transparence-technique">Transparence technique</a></li>
+<li><a href="#métadonnées-de-la-validation"
+id="toc-métadonnées-de-la-validation">Métadonnées de la
+validation</a></li>
+</ul></li>
+<li><a href="#ressources-téléchargeables"
+id="toc-ressources-téléchargeables">19. Ressources
+téléchargeables</a></li>
+<li><a href="#références" id="toc-références">20. Références</a></li>
+</ul>
+</nav>
+<blockquote>
+<p><strong>Retour d’expérience reproductible.</strong> Ce guide décrit
+une intégration réellement montée et validée : un régulateur de piscine
+<strong>Syclope HydroTouch CHY0444</strong> est lu en Modbus RTU via son
+port RS485, encapsulé dans TCP par un serveur série <strong>Waveshare
+RS232/485/422 TO POE ETH (B)</strong>, puis intégré nativement dans
+<strong>Home Assistant</strong>.<br />
+Les deux mesures finales ont été vérifiées simultanément sur l’écran du
+Syclope et par lecture logicielle : <strong>pH ≈ 7,17</strong> et
+<strong>Redox ≈ 882 mV</strong>.</p>
+</blockquote>
+<blockquote>
+<p><strong> .</strong> Les adresses IP
+visibles sont des exemples, les adresses MAC et identifiants matériels
+ont été masqués, et aucune donnée d’authentification n’est publiée.
+Matériel testé : <strong>Syclope CHY0444</strong> et <strong>Waveshare
+firmware V1.452</strong> ; validation réalisée le <strong>11 juillet
+2026</strong>.</p>
+</blockquote>
+<h1 id="résultat-final">1. Résultat final</h1>
+<p>L’architecture obtenue est la suivante :</p>
+<figure>
+<img src="assets/architecture.svg" alt="Architecture générale" />
+<figcaption aria-hidden="true">Architecture générale</figcaption>
+</figure>
+<p>Le résultat dans Home Assistant est constitué de deux entités :</p>
+<ul>
+<li><code>sensor.syclope_ph</code></li>
+<li><code>sensor.syclope_redox</code></li>
+</ul>
+<p>et de deux cartes Mushroom colorées selon des zones d’attention :</p>
+<figure>
+<img src="assets/23-dashboard-final.png"
+alt="Dashboard Home Assistant final" />
+<figcaption aria-hidden="true">Dashboard Home Assistant
+final</figcaption>
+</figure>
+<p>Dans l’exemple réel :</p>
+<ul>
+<li>pH 7,16 : vert, « Zone optimale » ;</li>
+<li>Redox 882 mV : rouge, « Trop haut ».</li>
+</ul>
+<p>Ces couleurs sont des <strong>seuils d’affichage
+personnalisés</strong>, pas des instructions de dosage. Elles doivent
+être adaptées au bassin, au traitement utilisé, aux recommandations du
+pisciniste et aux consignes du fabricant.</p>
+<h2 id="ce-qui-est-confirmé-et-ce-qui-ne-lest-pas">Ce qui est confirmé,
+et ce qui ne l’est pas</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Élément</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Communication physique RS485</td>
+<td>Confirmée</td>
+</tr>
+<tr class="even">
+<td>Transport réseau</td>
+<td>Confirmé : <strong>RTU over TCP</strong>, port 4196</td>
+</tr>
+<tr class="odd">
+<td>Adresse esclave</td>
+<td>Confirmée : <strong>1</strong></td>
+</tr>
+<tr class="even">
+<td>Paramètres série</td>
+<td>Confirmés : <strong>19200 bauds, 8 bits, sans parité, 1 stop
+bit</strong></td>
+</tr>
+<tr class="odd">
+<td>Fonction de lecture</td>
+<td>Confirmée : <strong>03 Holding Registers</strong></td>
+</tr>
+<tr class="even">
+<td>Fonction 04</td>
+<td>Refusée par le Syclope : <strong>Illegal Function</strong></td>
+</tr>
+<tr class="odd">
+<td>Registre pH</td>
+<td>Confirmé : PLC 41203 / adresse 0-based 1202</td>
+</tr>
+<tr class="even">
+<td>Registre Redox</td>
+<td>Confirmé : PLC 41303 / adresse 0-based 1302</td>
+</tr>
+<tr class="odd">
+<td>Format</td>
+<td>Confirmé : <code>float32</code>, mots inversés CDAB</td>
+</tr>
+<tr class="even">
+<td>Registres de consigne et d’alarme</td>
+<td>Candidats solides, mais non validés par modification volontaire</td>
+</tr>
+<tr class="odd">
+<td>Écriture depuis Home Assistant</td>
+<td>Non testée et volontairement exclue de ce guide</td>
+</tr>
+</tbody>
+</table>
+<h1 id="sécurité-et-limites">2. Sécurité et limites</h1>
+<p>Cette installation mélange :</p>
+<ul>
+<li>du <strong>230 V AC</strong> dans un coffret ;</li>
+<li>une alimentation TBTS 12 V DC ;</li>
+<li>des produits chimiques de piscine ;</li>
+<li>un régulateur pilotant des pompes de dosage.</li>
+</ul>
+<h2 id="règles-impératives">Règles impératives</h2>
+<ol type="1">
+<li>Couper et consigner l’alimentation avant d’ouvrir le coffret.</li>
+<li>Vérifier l’absence de tension avec un appareil adapté.</li>
+<li>Faire réaliser le câblage secteur par une personne qualifiée.</li>
+<li>Utiliser des embouts de câblage, des presse-étoupes et une
+séparation correcte entre secteur et basse tension.</li>
+<li>Ne pas se fier uniquement à la couleur des conducteurs. Dans une
+installation belge <strong>3 × 230 V sans neutre</strong>, un conducteur
+bleu peut être actif selon le câblage.</li>
+<li>Ne jamais modifier un registre Modbus inconnu. Le scan et
+l’intégration présentés ici sont <strong>en lecture seule</strong>.</li>
+<li>Ne pas utiliser Home Assistant comme unique dispositif de sécurité
+du traitement. Les sécurités hydrauliques, de débit et de surdosage
+doivent rester gérées par le Syclope et l’installation de
+filtration.</li>
+</ol>
+<p>La notice Syclope impose d’ailleurs de couper l’alimentation primaire
+avant le raccordement RS485 et indique que le port est destiné à
+l’enregistrement des mesures, alarmes et états.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<h1 id="matériel-utilisé">3. Matériel utilisé</h1>
+<h2 id="équipements-principaux">Équipements principaux</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Équipement</th>
+<th>Modèle / caractéristique</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Régulateur</td>
+<td>Syclope HydroTouch CHY0444</td>
+<td>Mesure et régulation pH / Redox</td>
+</tr>
+<tr class="even">
+<td>Serveur série</td>
+<td>Waveshare RS232/485/422 TO POE ETH (B)</td>
+<td>Conversion RS485 ↔︎ Ethernet</td>
+</tr>
+<tr class="odd">
+<td>Alimentation DIN</td>
+<td>Mean Well HDR-15-12 ou équivalent</td>
+<td>12 V DC, 1,25 A, 15 W</td>
+</tr>
+<tr class="even">
+<td>Protection amont</td>
+<td>Disjoncteur Schneider Acti9 C10 existant</td>
+<td>Protection du départ</td>
+</tr>
+<tr class="odd">
+<td>Câble RS485</td>
+<td>Une paire torsadée d’un câble U/UTP AWG24</td>
+<td>Liaison A/B</td>
+</tr>
+<tr class="even">
+<td>Réseau</td>
+<td>Ethernet, ici via CPL Devolo</td>
+<td>Liaison vers le LAN</td>
+</tr>
+<tr class="odd">
+<td>Logiciels de test</td>
+<td>VirCom, Modbus Poll, PowerShell, Python/PyModbus</td>
+<td>Configuration et diagnostic</td>
+</tr>
+<tr class="even">
+<td>Supervision</td>
+<td>Home Assistant + Mushroom</td>
+<td>Historisation et affichage</td>
+</tr>
+</tbody>
+</table>
+<p>Le Waveshare accepte une alimentation <strong>DC 6 à 36 V</strong> ou
+le PoE selon la variante. Son constructeur annonce une consommation
+d’environ 1,16 W sous 12 V : l’alimentation 12 V / 1,25 A offre donc une
+marge très confortable.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a><br />
+Le Mean Well HDR-15-12 fournit nominalement 12 V, 1,25 A et 15 W.<a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></p>
+<blockquote>
+<p><strong>Alternative PoE.</strong> Un switch ou injecteur PoE
+compatible peut éviter l’alimentation DIN. Le CPL utilisé dans cette
+installation ne fournissait pas de PoE, d’où le choix du 12 V. Choisir
+une seule méthode d’alimentation.</p>
+</blockquote>
+<h1 id="schéma-de-câblage">4. Schéma de câblage</h1>
+<figure>
+<img src="assets/wiring.svg" alt="Schéma de câblage" />
+<figcaption aria-hidden="true">Schéma de câblage</figcaption>
+</figure>
+<h2 id="alimentation-230-v-12-v-dc">4.1 Alimentation 230 V → 12 V
+DC</h2>
+<p>L’alimentation DIN possède :</p>
+<ul>
+<li>en entrée : <code>L</code> et <code>N</code> ;</li>
+<li>en sortie : <code>+V</code> et <code>-V</code> ;</li>
+<li>une plage d’ajustement d’environ 10,8 à 13,8 V sur le modèle
+observé.</li>
+</ul>
+<figure>
+<img src="assets/01-alimentation-meanwell.jpg" alt="Alimentation DIN" />
+<figcaption aria-hidden="true">Alimentation DIN</figcaption>
+</figure>
+<p>Dans le montage réalisé, l’entrée de l’alimentation a été reprise en
+aval d’un Schneider C10 existant.</p>
+<figure>
+<img src="assets/03-alimentation-montage-coffret.jpg"
+alt="Alimentation montée dans le coffret" />
+<figcaption aria-hidden="true">Alimentation montée dans le
+coffret</figcaption>
+</figure>
+<p>Avant de raccorder le Waveshare :</p>
+<ol type="1">
+<li>alimenter brièvement l’alimentation seule ;</li>
+<li>mesurer au multimètre entre <code>+V</code> et <code>-V</code>
+;</li>
+<li>régler la sortie autour de <strong>12,0 V</strong> ;</li>
+<li>couper à nouveau le secteur ;</li>
+<li>connecter <code>+V → VCC</code> et <code>-V → GND</code>.</li>
+</ol>
+<figure>
+<img src="assets/02-bornier-waveshare-alimentation.jpg"
+alt="Bornier alimentation du Waveshare" />
+<figcaption aria-hidden="true">Bornier alimentation du
+Waveshare</figcaption>
+</figure>
+<p>Le bornier du Waveshare est clairement repéré :</p>
+<p><code>RB | RA | TA | TB | PE | GND | VCC</code></p>
+<p>Pour l’alimentation utilisée ici :</p>
+<ul>
+<li>fil rouge : <code>VCC</code> ;</li>
+<li>fil noir : <code>GND</code>.</li>
+</ul>
+<h2 id="raccordement-rs485-côté-syclope">4.2 Raccordement RS485 côté
+Syclope</h2>
+<p>Le bornier RS485 est situé en haut à gauche de la carte HydroTouch et
+repéré verticalement :</p>
+<ul>
+<li><code>C</code></li>
+<li><code>B</code></li>
+<li><code>A</code></li>
+</ul>
+<figure>
+<img src="assets/05-carte-syclope-complete.jpg"
+alt="Carte complète du HydroTouch" />
+<figcaption aria-hidden="true">Carte complète du HydroTouch</figcaption>
+</figure>
+<figure>
+<img src="assets/06-bornier-rs485-syclope.jpg"
+alt="Gros plan du bornier RS485" />
+<figcaption aria-hidden="true">Gros plan du bornier RS485</figcaption>
+</figure>
+<p>La notice officielle demande de câbler A, B et C.<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>
+Dans la liaison courte testée, <strong>A et B seuls ont suffi</strong>.
+Pour une installation plus robuste, surtout avec un câble long ou un
+environnement perturbé :</p>
+<ul>
+<li>Syclope <code>A</code> → Waveshare <code>TA</code> ;</li>
+<li>Syclope <code>B</code> → Waveshare <code>TB</code> ;</li>
+<li>Syclope <code>C</code> → Waveshare <code>GND</code> comme conducteur
+de référence, après vérification avec le fabricant.</li>
+</ul>
+<p>Le mapping A/B n’est pas universel entre fabricants. Si aucune
+réponse n’est obtenue alors que tout le reste est correct, couper
+l’alimentation et inverser A/B.</p>
+<h2 id="choix-du-câble">4.3 Choix du câble</h2>
+<p>Un câble réseau U/UTP à quatre paires AWG24 a été utilisé.</p>
+<figure>
+<img src="assets/07-cable-rs485-utp.jpg" alt="Câble utilisé" />
+<figcaption aria-hidden="true">Câble utilisé</figcaption>
+</figure>
+<p>Utiliser <strong>les deux conducteurs d’une même paire
+torsadée</strong> :</p>
+<ul>
+<li>un conducteur pour A ;</li>
+<li>l’autre pour B.</li>
+</ul>
+<p>Ne pas prendre A dans une paire et B dans une autre. Garder les
+torsades au plus près des borniers. Les autres conducteurs doivent être
+isolés et rangés.</p>
+<p>Pour une liaison longue :</p>
+<ul>
+<li>préférer un câble blindé pour bus industriel ;</li>
+<li>mettre une terminaison 120 Ω aux deux extrémités uniquement lorsque
+la topologie et la longueur le justifient ;</li>
+<li>éviter les dérivations en étoile.</li>
+</ul>
+<p>Waveshare précise que, sur une courte distance, ses résistances de
+terminaison peuvent être laissées hors circuit, tandis que les longues
+liaisons multi-équipements utilisent typiquement 120 Ω aux deux
+extrémités.<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></p>
+<h2 id="ethernet">4.4 Ethernet</h2>
+<p>Le câble RJ45 du Waveshare rejoint le réseau local, directement ou
+via un adaptateur CPL.</p>
+<figure>
+<img src="assets/08-waveshare-installe-coffret.jpg"
+alt="Waveshare installé dans le coffret" />
+<figcaption aria-hidden="true">Waveshare installé dans le
+coffret</figcaption>
+</figure>
+<p>Une fois sous tension :</p>
+<ul>
+<li>LED <code>Power</code> rouge fixe ;</li>
+<li>LED <code>Link</code> verte lorsque le lien Ethernet est établi
+;</li>
+<li>LED <code>Active</code> lors des échanges série.</li>
+</ul>
+<figure>
+<img src="assets/09-leds-waveshare.jpg" alt="LED du Waveshare" />
+<figcaption aria-hidden="true">LED du Waveshare</figcaption>
+</figure>
+<h1 id="première-boucle-de-vérification-matériel">5. Première boucle de
+vérification : matériel</h1>
+<p>Avant de fermer les coffrets :</p>
+<ul class="task-list">
+<li><label><input type="checkbox" />12 V mesuré avec la bonne polarité
+;</label></li>
+<li><label><input type="checkbox" />aucun cuivre nu hors bornier
+;</label></li>
+<li><label><input type="checkbox" />câbles secteur et basse tension
+correctement séparés ;</label></li>
+<li><label><input type="checkbox" />paire A/B torsadée ;</label></li>
+<li><label><input type="checkbox" />connecteurs serrés ;</label></li>
+<li><label><input type="checkbox" />écran Syclope opérationnel
+;</label></li>
+<li><label><input type="checkbox" />LED Power et Link du Waveshare
+allumées ;</label></li>
+<li><label><input type="checkbox" />aucune pompe de dosage ne se
+comporte anormalement.</label></li>
+</ul>
+<figure>
+<img src="assets/10-rs485-cable-syclope.jpg"
+alt="Liaison RS485 installée" />
+<figcaption aria-hidden="true">Liaison RS485 installée</figcaption>
+</figure>
+<h1 id="paramétrage-du-syclope">6. Paramétrage du Syclope</h1>
+<p>Dans le menu installateur :</p>
+<p><strong>Paramétrage communication</strong></p>
+<p>Les valeurs utilisées sont :</p>
+<table>
+<thead>
+<tr class="header">
+<th>Paramètre</th>
+<th style="text-align: right;">Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Vitesse Modbus</td>
+<td style="text-align: right;">19200 bauds</td>
+</tr>
+<tr class="even">
+<td>Parité</td>
+<td style="text-align: right;">Sans</td>
+</tr>
+<tr class="odd">
+<td>Adresse Modbus</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="assets/11-parametres-communication-syclope.jpg"
+alt="Paramètres de communication du Syclope" />
+<figcaption aria-hidden="true">Paramètres de communication du
+Syclope</figcaption>
+</figure>
+<p>Ces valeurs doivent être identiques dans le Waveshare et dans le
+client Modbus.</p>
+<h1 id="configuration-du-waveshare">7. Configuration du Waveshare</h1>
+<h2 id="découverte-avec-vircom">7.1 Découverte avec VirCom</h2>
+<p>VirCom recherche les serveurs série par diffusion réseau. Il peut
+donc voir un appareil qui n’est pas encore dans le même sous-réseau IP
+que le PC, alors que <code>arp -a</code> peut ne rien montrer.</p>
+<figure>
+<img src="assets/15-vircom-detection.png"
+alt="Découverte dans VirCom — capture " />
+<figcaption aria-hidden="true">Découverte dans VirCom — capture
+</figcaption>
+</figure>
+<h3 id="pourquoi-arp--a-nétait-pas-concluant">Pourquoi
+<code>arp -a</code> n’était pas concluant</h3>
+<p>La table ARP :</p>
+<ul>
+<li>n’est pas un scanner réseau ;</li>
+<li>ne contient que des voisins récemment résolus ;</li>
+<li>ne montre pas forcément un appareil sur un autre sous-réseau ;</li>
+<li>peut rester identique lorsqu’un appareil est débranché tant que
+l’entrée n’expire pas.</li>
+</ul>
+<p>VirCom utilise sa propre découverte par broadcast, ce qui explique
+qu’il ait trouvé le Waveshare alors que la table ARP ne le révélait
+pas.</p>
+<h2 id="paramètres-réseau-validés">7.2 Paramètres réseau validés</h2>
+<p>Configuration d’exemple utilisée dans la  :</p>
+<blockquote>
+<p><strong>Adresses d’exemple.</strong> <code>192.168.1.200</code>,
+<code>192.168.1.1</code> et <code>192.168.1.50</code> sont utilisées
+uniquement pour illustrer la procédure. Remplacez-les par les adresses
+de votre propre réseau local et réservez l’adresse du Waveshare dans
+votre routeur.</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>IP</td>
+<td><code>192.168.1.200</code></td>
+</tr>
+<tr class="even">
+<td>Masque</td>
+<td><code>255.255.255.0</code></td>
+</tr>
+<tr class="odd">
+<td>Passerelle</td>
+<td><code>192.168.1.1</code></td>
+</tr>
+<tr class="even">
+<td>Mode IP</td>
+<td>Static</td>
+</tr>
+<tr class="odd">
+<td>Work Mode</td>
+<td>TCP Server</td>
+</tr>
+<tr class="even">
+<td>Port données série</td>
+<td><code>4196</code></td>
+</tr>
+<tr class="odd">
+<td>Port interface web</td>
+<td><code>502</code></td>
+</tr>
+<tr class="even">
+<td>Multi-host</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>Protocol</td>
+<td>None / transmission transparente</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="assets/16-vircom-parametres.png"
+alt="Paramètres VirCom — capture " />
+<figcaption aria-hidden="true">Paramètres VirCom — capture
+</figcaption>
+</figure>
+<blockquote>
+<p><strong>Attention au port 502.</strong> Dans cette configuration
+précise, <code>502</code> est le port HTTP de gestion du Waveshare. Les
+trames Modbus passent sur <strong>4196</strong>. Le fait que 502 soit
+habituellement le port Modbus TCP ne change pas cette configuration
+personnalisée.</p>
+</blockquote>
+<p>L’interface web était donc accessible avec :</p>
+<p><code>http://192.168.1.200:502</code></p>
+<figure>
+<img src="assets/17-waveshare-interface-web.png"
+alt="Interface web du Waveshare — capture " />
+<figcaption aria-hidden="true">Interface web du Waveshare — capture
+</figcaption>
+</figure>
+<h2 id="paramètres-série">7.3 Paramètres série</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Paramètre</th>
+<th style="text-align: right;">Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Baud Rate</td>
+<td style="text-align: right;">19200</td>
+</tr>
+<tr class="even">
+<td>Data bits</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td>Parity</td>
+<td style="text-align: right;">None</td>
+</tr>
+<tr class="even">
+<td>Stop bits</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td>Flow control</td>
+<td style="text-align: right;">None</td>
+</tr>
+</tbody>
+</table>
+<p>Le point essentiel découvert pendant le diagnostic est le
+<strong>framing réseau</strong> :</p>
+<ul>
+<li>ce n’est pas du Modbus TCP natif ;</li>
+<li>ce sont des trames <strong>Modbus RTU brutes encapsulées dans une
+connexion TCP</strong> ;</li>
+<li>le client doit donc utiliser <strong>RTU over TCP</strong>.</li>
+</ul>
+<p>Le Waveshare est utilisé comme serveur série TCP transparent. Le
+constructeur documente le mode TCP Server, le port de données 4196 dans
+ses exemples et la prise en charge de la transmission série/Ethernet.<a
+href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a></p>
+<h1 id="deuxième-boucle-de-vérification-réseau">8. Deuxième boucle de
+vérification : réseau</h1>
+<p>Dans PowerShell :</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Test-NetConnection <span class="dv">192.168</span><span class="op">.</span><span class="dv">1.200</span> <span class="op">-</span>Port <span class="dv">4196</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Test</span><span class="op">-</span>NetConnection <span class="dv">192.168</span><span class="op">.</span><span class="dv">1.200</span> <span class="op">-</span>Port <span class="dv">502</span></span></code></pre></div>
+<p>Le résultat attendu pour chaque port est :</p>
+<pre class="text"><code>TcpTestSucceeded : True</code></pre>
+<figure>
+<img src="assets/18-test-netconnection.png"
+alt="Test des ports — terminal recréé avec adresses d’exemple" />
+<figcaption aria-hidden="true">Test des ports — terminal recréé avec
+adresses d’exemple</figcaption>
+</figure>
+<p>Un <code>TcpTestSucceeded : True</code> prouve uniquement que le
+socket TCP est ouvert. Il ne prouve pas encore que le Syclope répond en
+Modbus.</p>
+<h2 id="en-cas-dappareil-introuvable">En cas d’appareil introuvable</h2>
+<ol type="1">
+<li>connecter temporairement le PC directement au Waveshare ;</li>
+<li>désactiver le Wi-Fi du PC ;</li>
+<li>attribuer au PC une IP statique compatible avec l’IP d’usine, par
+exemple <code>192.168.1.50/24</code> ;</li>
+<li>lancer VirCom ;</li>
+<li>attribuer au Waveshare une IP du réseau principal ;</li>
+<li>remettre le PC en DHCP.</li>
+</ol>
+<h1 id="validation-avec-modbus-poll">9. Validation avec Modbus Poll</h1>
+<h2 id="connexion">9.1 Connexion</h2>
+<p>Dans Modbus Poll, choisir :</p>
+<ul>
+<li>connexion : <strong>Modbus RTU/ASCII Over TCP/IP</strong> ;</li>
+<li>mode : RTU ;</li>
+<li>IP : <code>192.168.1.200</code> ;</li>
+<li>port : <code>4196</code>.</li>
+</ul>
+<p>Ne pas choisir le Modbus TCP classique pour cette configuration.</p>
+<h2 id="première-lecture">9.2 Première lecture</h2>
+<p>Dans <strong>Setup → Read/Write Definition</strong> :</p>
+<table>
+<thead>
+<tr class="header">
+<th>Champ</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Slave ID</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Function</td>
+<td>03 Read Holding Registers</td>
+</tr>
+<tr class="odd">
+<td>Address</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Quantity</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>Scan rate</td>
+<td>1000 ms</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="assets/19-modbus-poll-definition.png"
+alt="Définition de lecture Modbus Poll" />
+<figcaption aria-hidden="true">Définition de lecture Modbus
+Poll</figcaption>
+</figure>
+<p>Une réponse avec des valeurs numériques, même incompréhensibles,
+confirme :</p>
+<ul>
+<li>le TCP ;</li>
+<li>le framing RTU ;</li>
+<li>le câblage RS485 ;</li>
+<li>l’adresse esclave ;</li>
+<li>la vitesse et la parité.</li>
+</ul>
+<h2 id="test-de-la-fonction-04">9.3 Test de la fonction 04</h2>
+<p>La fonction <code>04 Read Input Registers</code> a renvoyé :</p>
+<p><code>01 Illegal Function</code></p>
+<figure>
+<img src="assets/20-modbus-illegal-function.png"
+alt="Fonction 04 refusée" />
+<figcaption aria-hidden="true">Fonction 04 refusée</figcaption>
+</figure>
+<p>C’est une information utile, pas une panne :</p>
+<ul>
+<li>la requête est bien arrivée au Syclope ;</li>
+<li>le Syclope a répondu ;</li>
+<li>cette fonction n’est simplement pas implémentée pour ce besoin.</li>
+</ul>
+<p>La suite des recherches s’est donc faite exclusivement avec la
+fonction <strong>03</strong>.</p>
+<h1 id="rétro-ingénierie-de-la-cartographie-modbus">10. Rétro-ingénierie
+de la cartographie Modbus</h1>
+<p>La table de registres détaillée du CHY0444 n’étant pas disponible
+publiquement, les registres ont été identifiés par lecture systématique
+et corrélation avec l’écran.</p>
+<h2 id="premier-échec-python-modbus-tcp-classique">10.1 Premier échec
+Python : Modbus TCP classique</h2>
+<p>Le client TCP se connectait :</p>
+<pre class="text"><code>Connexion TCP : True</code></pre>
+<p>mais ne recevait aucune réponse à la requête. La cause était le
+framer par défaut de <code>ModbusTcpClient</code>, qui envoie des trames
+Modbus TCP avec en-tête MBAP.</p>
+<p>Le Waveshare attendait ici des trames RTU brutes.</p>
+<h2 id="correction-framer-rtu">10.2 Correction : framer RTU</h2>
+<p>La correction décisive :</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pymodbus <span class="im">import</span> FramerType</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pymodbus.client <span class="im">import</span> ModbusTcpClient</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> ModbusTcpClient(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    host<span class="op">=</span><span class="st">&quot;192.168.1.200&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    port<span class="op">=</span><span class="dv">4196</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    framer<span class="op">=</span>FramerType.RTU,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    timeout<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    retries<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>La même lecture a alors renvoyé exactement les valeurs observées dans
+Modbus Poll.</p>
+<h2 id="scan-des-registres">10.3 Scan des registres</h2>
+<p>Le script fourni dans <code>scripts/scan_syclope.py</code> lit les
+Holding Registers par blocs et génère :</p>
+<ul>
+<li>un CSV brut ;</li>
+<li>un CSV de floats plausibles ;</li>
+<li>un CSV des zones répondant.</li>
+</ul>
+<p>Commande avec l’adresse d’exemple :</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pip install <span class="op">-</span>r scripts\requirements<span class="op">.</span><span class="fu">txt</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>python scripts\scan_syclope<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>host <span class="dv">192.168</span><span class="op">.</span><span class="dv">1.200</span> <span class="op">--</span>start <span class="dv">0</span> <span class="op">--</span>end <span class="dv">5000</span> <span class="op">--</span>block <span class="dv">100</span></span></code></pre></div>
+<p>Les scripts acceptent également <code>SYCLOPE_HOST</code>,
+<code>SYCLOPE_PORT</code> et <code>SYCLOPE_DEVICE_ID</code> comme
+variables d’environnement. Un modèle est fourni dans
+<code>.env.example</code>.</p>
+<p>Le scan réel a identifié des zones actives notamment :</p>
+<ul>
+<li>0–399 ;</li>
+<li>1000–1499 ;</li>
+<li>2000–3299.</li>
+</ul>
+<p>Les fichiers bruts sont fournis dans le dossier
+<code>data/</code>.</p>
+<h2 id="comprendre-ladressage">10.4 Comprendre l’adressage</h2>
+<p>Modbus Poll affichait :</p>
+<pre class="text"><code>Address 1202  → PLC address 41203</code></pre>
+<p>La conversion utilisée est :</p>
+<pre class="text"><code>adresse PLC = 40001 + adresse 0-based</code></pre>
+<p>Donc :</p>
+<table>
+<thead>
+<tr class="header">
+<th>Donnée</th>
+<th style="text-align: right;">Registre PLC</th>
+<th style="text-align: right;">Adresse Home Assistant / PyModbus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pH</td>
+<td style="text-align: right;">41203</td>
+<td style="text-align: right;">1202</td>
+</tr>
+<tr class="even">
+<td>Redox</td>
+<td style="text-align: right;">41303</td>
+<td style="text-align: right;">1302</td>
+</tr>
+</tbody>
+</table>
+<h2 id="comprendre-le-float32-cdab">10.5 Comprendre le float32 CDAB</h2>
+<p>Chaque mesure occupe deux registres 16 bits.</p>
+<p>Pour le pH, un scan a donné :</p>
+<ul>
+<li>adresse 1202 : <code>0x8D55</code> ;</li>
+<li>adresse 1203 : <code>0x40E5</code>.</li>
+</ul>
+<p>L’ordre brut n’est pas ABCD mais <strong>CDAB</strong> : les deux
+mots 16 bits sont inversés.</p>
+<p>En Python :</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> second.to_bytes(<span class="dv">2</span>, <span class="st">&quot;big&quot;</span>) <span class="op">+</span> first.to_bytes(<span class="dv">2</span>, <span class="st">&quot;big&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> struct.unpack(<span class="st">&quot;&gt;f&quot;</span>, raw)[<span class="dv">0</span>]</span></code></pre></div>
+<p>Dans Home Assistant, l’équivalent est :</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data_type</span><span class="kw">:</span><span class="at"> float32</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">swap</span><span class="kw">:</span><span class="at"> word</span></span></code></pre></div>
+<p>La documentation Home Assistant définit précisément
+<code>swap: word</code> comme la transformation ABCD → CDAB et indique
+qu’un <code>float32</code> occupe deux registres.<a href="#fn7"
+class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<h1 id="registres-identifiés">11. Registres identifiés</h1>
+<h2 id="registres-confirmés">Registres confirmés</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Mesure</th>
+<th style="text-align: right;">Registre PLC</th>
+<th style="text-align: right;">Adresse 0-based</th>
+<th>Fonction</th>
+<th>Type</th>
+<th>Ordre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pH actuel</td>
+<td style="text-align: right;"><strong>41203</strong></td>
+<td style="text-align: right;"><strong>1202</strong></td>
+<td>03</td>
+<td>float32</td>
+<td>CDAB</td>
+</tr>
+<tr class="even">
+<td>Redox actuel</td>
+<td style="text-align: right;"><strong>41303</strong></td>
+<td style="text-align: right;"><strong>1302</strong></td>
+<td>03</td>
+<td>float32</td>
+<td>CDAB</td>
+</tr>
+</tbody>
+</table>
+<p>Test direct validé :</p>
+<pre class="text"><code>pH: 7.169264793395996
+Redox: 882.35205078125</code></pre>
+<p>L’écran affichait au même moment environ 7,17 et 882 mV :</p>
+<figure>
+<img src="assets/12-valeurs-ph-redox.jpg"
+alt="Valeurs affichées sur le Syclope" />
+<figcaption aria-hidden="true">Valeurs affichées sur le
+Syclope</figcaption>
+</figure>
+<h2 id="candidats-solides-mais-non-validés-par-modification">Candidats
+solides mais non validés par modification</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Signification probable</th>
+<th style="text-align: right;">Registre PLC</th>
+<th style="text-align: right;">Adresse</th>
+<th style="text-align: right;">Valeur observée</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Consigne pH</td>
+<td style="text-align: right;">41205</td>
+<td style="text-align: right;">1204</td>
+<td style="text-align: right;">7,20</td>
+</tr>
+<tr class="even">
+<td>Seuil haut pH probable</td>
+<td style="text-align: right;">41209</td>
+<td style="text-align: right;">1208</td>
+<td style="text-align: right;">8,50</td>
+</tr>
+<tr class="odd">
+<td>Seuil bas pH probable</td>
+<td style="text-align: right;">41211</td>
+<td style="text-align: right;">1210</td>
+<td style="text-align: right;">6,80</td>
+</tr>
+<tr class="even">
+<td>Consigne Redox</td>
+<td style="text-align: right;">41305</td>
+<td style="text-align: right;">1304</td>
+<td style="text-align: right;">700 mV</td>
+</tr>
+<tr class="odd">
+<td>Seuil haut Redox probable</td>
+<td style="text-align: right;">41309</td>
+<td style="text-align: right;">1308</td>
+<td style="text-align: right;">850 mV</td>
+</tr>
+<tr class="even">
+<td>Seuil bas Redox probable</td>
+<td style="text-align: right;">41311</td>
+<td style="text-align: right;">1310</td>
+<td style="text-align: right;">500 mV</td>
+</tr>
+</tbody>
+</table>
+<p>Ne pas confondre ces valeurs avec les limites de réglage visibles
+dans le menu :</p>
+<ul>
+<li>plage autorisée de consigne pH : 6,50 à 7,60 ;</li>
+<li>plage autorisée de consigne Redox : 650 à 800 mV.</li>
+</ul>
+<figure>
+<img src="assets/13-parametres-ph.jpg" alt="Paramètres de la voie pH" />
+<figcaption aria-hidden="true">Paramètres de la voie pH</figcaption>
+</figure>
+<figure>
+<img src="assets/14-parametres-redox.jpg"
+alt="Paramètres de la voie Redox" />
+<figcaption aria-hidden="true">Paramètres de la voie Redox</figcaption>
+</figure>
+<p>Les registres candidats doivent être confirmés en modifiant
+temporairement un paramètre, en réalisant deux scans et en comparant les
+CSV. Aucune écriture Modbus ne doit être tentée avant cette
+validation.</p>
+<p>Le fichier détaillé <code>data/register_map.csv</code> distingue les
+registres confirmés des hypothèses.</p>
+<h1 id="script-de-test-minimal">12. Script de test minimal</h1>
+<p>Le fichier <code>scripts/test_syclope.py</code> effectue la lecture
+finale.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pip install pymodbus</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>python scripts\test_syclope<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
+<p>Sortie attendue :</p>
+<pre class="text"><code>pH: 7.1693
+Redox: 882.35 mV</code></pre>
+<p>Fermer Modbus Poll avant le test : le multi-host était désactivé sur
+le Waveshare, et une connexion ouverte peut monopoliser le port.</p>
+<h1 id="intégration-dans-home-assistant">13. Intégration dans Home
+Assistant</h1>
+<p>Home Assistant prend en charge explicitement le type
+<code>rtuovertcp</code>, destiné aux forwarders TCP vers liaison
+série.<a href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a></p>
+<p>Ajouter dans <code>configuration.yaml</code> :</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modbus</span><span class="kw">:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> syclope_hydrotouch</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> rtuovertcp</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">host</span><span class="kw">:</span><span class="at"> </span><span class="fl">192.168.1.200</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">port</span><span class="kw">:</span><span class="at"> </span><span class="dv">4196</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">timeout</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">message_wait_milliseconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">sensors</span><span class="kw">:</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Syclope pH&quot;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">unique_id</span><span class="kw">:</span><span class="at"> syclope_ph</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">slave</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">address</span><span class="kw">:</span><span class="at"> </span><span class="dv">1202</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">input_type</span><span class="kw">:</span><span class="at"> holding</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data_type</span><span class="kw">:</span><span class="at"> float32</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">swap</span><span class="kw">:</span><span class="at"> word</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">precision</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">scan_interval</span><span class="kw">:</span><span class="at"> </span><span class="dv">15</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state_class</span><span class="kw">:</span><span class="at"> measurement</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">unit_of_measurement</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;pH&quot;</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Syclope Redox&quot;</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">unique_id</span><span class="kw">:</span><span class="at"> syclope_redox</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">slave</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">address</span><span class="kw">:</span><span class="at"> </span><span class="dv">1302</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">input_type</span><span class="kw">:</span><span class="at"> holding</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data_type</span><span class="kw">:</span><span class="at"> float32</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">swap</span><span class="kw">:</span><span class="at"> word</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">precision</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">scan_interval</span><span class="kw">:</span><span class="at"> </span><span class="dv">15</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state_class</span><span class="kw">:</span><span class="at"> measurement</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">unit_of_measurement</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mV&quot;</span></span></code></pre></div>
+<p>Le même bloc est disponible dans :</p>
+<p><code>home-assistant/configuration_modbus.yaml</code></p>
+<h2 id="pourquoi-il-ny-a-pas-icon">Pourquoi il n’y a pas
+<code>icon:</code></h2>
+<p>L’option <code>icon</code> n’est pas acceptée dans la définition d’un
+capteur Modbus. L’icône peut être :</p>
+<ul>
+<li>définie depuis l’interface de l’entité ;</li>
+<li>ou imposée dans la carte du dashboard.</li>
+</ul>
+<p>Après modification :</p>
+<ol type="1">
+<li><strong>Outils de développement → YAML → Vérifier la
+configuration</strong> ;</li>
+<li>redémarrer Home Assistant, ou utiliser le rechargement Modbus si
+disponible ;</li>
+<li>vérifier les entités.</li>
+</ol>
+<figure>
+<img src="assets/21-home-assistant-entite-ph.png"
+alt="Entité pH dans Home Assistant" />
+<figcaption aria-hidden="true">Entité pH dans Home
+Assistant</figcaption>
+</figure>
+<figure>
+<img src="assets/22-home-assistant-entite-redox.png"
+alt="Entité Redox dans Home Assistant" />
+<figcaption aria-hidden="true">Entité Redox dans Home
+Assistant</figcaption>
+</figure>
+<p>Les identifiants confirmés sont :</p>
+<ul>
+<li><code>sensor.syclope_ph</code></li>
+<li><code>sensor.syclope_redox</code></li>
+</ul>
+<h1 id="troisième-boucle-de-vérification-home-assistant">14. Troisième
+boucle de vérification : Home Assistant</h1>
+<ul class="task-list">
+<li><label><input type="checkbox" />configuration YAML valide
+;</label></li>
+<li><label><input type="checkbox" />intégration Modbus visible dans
+Appareils et services ;</label></li>
+<li><label><input type="checkbox" />entités non indisponibles
+;</label></li>
+<li><label><input type="checkbox" />valeur pH identique à l’écran à
+±0,01 ;</label></li>
+<li><label><input type="checkbox" />valeur Redox identique à l’écran
+après arrondi ;</label></li>
+<li><label><input type="checkbox" />Modbus Poll et scripts de test
+fermés ;</label></li>
+<li><label><input type="checkbox" />évolution des valeurs visible dans
+l’historique.</label></li>
+</ul>
+<p>Pour activer des journaux temporaires :</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logger</span><span class="kw">:</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default</span><span class="kw">:</span><span class="at"> warning</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">logs</span><span class="kw">:</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">homeassistant.components.modbus</span><span class="kw">:</span><span class="at"> debug</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pymodbus</span><span class="kw">:</span><span class="at"> debug</span></span></code></pre></div>
+<p>Retirer ou réduire ces logs après diagnostic.</p>
+<h1 id="carte-mushroom-avec-zones-de-couleur">15. Carte Mushroom avec
+zones de couleur</h1>
+<p>Mushroom peut être installé via HACS. La carte Template accepte les
+modèles Jinja dans les champs principaux, secondaires, couleur d’icône
+et badge.<a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a></p>
+<p>Le bloc complet est fourni dans :</p>
+<p><code>home-assistant/dashboard_mushroom.yaml</code></p>
+<p>Les zones choisies dans cette installation sont :</p>
+<h2 id="ph">pH</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Couleur</th>
+<th>Plage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Vert</td>
+<td>6,80 à 7,40</td>
+</tr>
+<tr class="even">
+<td>Jaune</td>
+<td>6,50–6,80 et 7,40–7,60</td>
+</tr>
+<tr class="odd">
+<td>Rouge</td>
+<td>&lt; 6,50 ou &gt; 7,60</td>
+</tr>
+</tbody>
+</table>
+<h2 id="redox">Redox</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Couleur</th>
+<th>Plage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Vert</td>
+<td>700 à 780 mV</td>
+</tr>
+<tr class="even">
+<td>Jaune</td>
+<td>650–700 et 780–800 mV</td>
+</tr>
+<tr class="odd">
+<td>Rouge</td>
+<td>&lt; 650 ou &gt; 800 mV</td>
+</tr>
+</tbody>
+</table>
+<p>Extrait de la carte pH :</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> custom:mushroom-template-card</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">entity</span><span class="kw">:</span><span class="at"> sensor.syclope_ph</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">primary</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  {{ states(&#39;sensor.syclope_ph&#39;) | float(0) | round(2) }} pH</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">secondary</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  {% set v = states(&#39;sensor.syclope_ph&#39;) | float(0) %}</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  {% if not has_value(&#39;sensor.syclope_ph&#39;) %}</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    Indisponible</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  {% elif v &lt; 6.5 %}</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    Trop bas</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  {% elif v &lt; 6.8 %}</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    Bas — à surveiller</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  {% elif v &lt;= 7.4 %}</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    Zone optimale</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  {% elif v &lt;= 7.6 %}</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    Haut — à surveiller</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  {% else %}</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    Trop haut</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  {% endif %}</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu">icon</span><span class="kw">:</span><span class="at"> mdi:ph</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="fu">icon_color</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  {% set v = states(&#39;sensor.syclope_ph&#39;) | float(0) %}</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  {% if not has_value(&#39;sensor.syclope_ph&#39;) %}</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    grey</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  {% elif 6.8 &lt;= v &lt;= 7.4 %}</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    green</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  {% elif 6.5 &lt;= v &lt;= 7.6 %}</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    amber</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  {% else %}</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    red</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  {% endif %}</span></code></pre></div>
+<h1 id="dépannage">16. Dépannage</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symptôme</th>
+<th>Cause probable</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Power éteinte</td>
+<td>Absence de 12 V ou polarité inversée</td>
+<td>Mesurer VCC/GND</td>
+</tr>
+<tr class="even">
+<td>Link éteinte</td>
+<td>Câble ou CPL sans lien</td>
+<td>Tester un câble direct</td>
+</tr>
+<tr class="odd">
+<td>VirCom voit l’appareil, ARP non</td>
+<td>Normal : méthodes de découverte différentes</td>
+<td>Utiliser VirCom ou connexion directe</td>
+</tr>
+<tr class="even">
+<td>Port 4196 fermé</td>
+<td>Mauvaise IP, firewall ou mode</td>
+<td>Vérifier IP et TCP Server</td>
+</tr>
+<tr class="odd">
+<td>Port ouvert mais aucun Modbus</td>
+<td>Mauvais framing</td>
+<td>Utiliser RTU over TCP</td>
+</tr>
+<tr class="even">
+<td>Modbus TCP classique timeout</td>
+<td>MBAP envoyé au lieu de RTU</td>
+<td><code>FramerType.RTU</code> / <code>type: rtuovertcp</code></td>
+</tr>
+<tr class="odd">
+<td><code>Illegal Function</code> avec 04</td>
+<td>Fonction non supportée</td>
+<td>Revenir à 03</td>
+</tr>
+<tr class="even">
+<td>Valeurs énormes ou négatives</td>
+<td>Mauvais type ou ordre de mots</td>
+<td><code>float32</code>, <code>swap: word</code></td>
+</tr>
+<tr class="odd">
+<td>pH correct dans Python mais indisponible dans HA</td>
+<td>Connexion déjà occupée</td>
+<td>Fermer Modbus Poll/scripts</td>
+</tr>
+<tr class="even">
+<td>YAML refuse <code>icon</code></td>
+<td>Option non admise par le capteur Modbus</td>
+<td>Mettre l’icône dans UI/dashboard</td>
+</tr>
+<tr class="odd">
+<td>Valeurs intermittentes</td>
+<td>A/B, référence C, parasites, terminaison</td>
+<td>Vérifier paire, C/GND, topologie</td>
+</tr>
+<tr class="even">
+<td>Plus aucune réponse après essais</td>
+<td>Session TCP bloquée</td>
+<td>Redémarrer le Waveshare</td>
+</tr>
+<tr class="odd">
+<td>Interface web sur 502 mais pas de Modbus</td>
+<td>Normal dans cette config</td>
+<td>Modbus est sur 4196</td>
+</tr>
+</tbody>
+</table>
+<h1 id="fiabilisation-pour-une-installation-durable">17. Fiabilisation
+pour une installation durable</h1>
+<h2 id="réseau">Réseau</h2>
+<ul>
+<li>réserver l’IP <code>192.168.1.200</code> dans le routeur, même si
+elle est statique ;</li>
+<li>sauvegarder les paramètres VirCom/Waveshare ;</li>
+<li>documenter le port 4196 ;</li>
+<li>limiter l’accès au réseau local ;</li>
+<li>ne pas exposer directement le Waveshare à Internet.</li>
+</ul>
+<h2 id="électricité">Électricité</h2>
+<ul>
+<li>utiliser un coffret fermé ;</li>
+<li>ajouter un repérage clair des conducteurs ;</li>
+<li>fixer le Waveshare sur rail ou support ;</li>
+<li>éviter que les câbles exercent une traction sur les borniers ;</li>
+<li>protéger la liaison Ethernet contre l’humidité ;</li>
+<li>envisager une protection surtension dans un environnement
+extérieur.</li>
+</ul>
+<h2 id="modbus">Modbus</h2>
+<ul>
+<li>conserver un intervalle de lecture raisonnable, ici 15 s ;</li>
+<li>ne pas scanner 65 536 registres en continu ;</li>
+<li>ne pas écrire dans des registres non documentés ;</li>
+<li>conserver les CSV d’origine pour comparer les futures versions de
+firmware.</li>
+</ul>
+<h2 id="entretien-de-la-mesure">Entretien de la mesure</h2>
+<p>L’intégration ne remplace pas :</p>
+<ul>
+<li>la calibration des sondes ;</li>
+<li>les contrôles colorimétriques ;</li>
+<li>la vérification du débit ;</li>
+<li>le remplacement des sondes vieillissantes ;</li>
+<li>la surveillance des bidons et pompes.</li>
+</ul>
+<p>Le constructeur recommande de confronter régulièrement les mesures
+affichées à une analyse de référence.<a href="#fn10"
+class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a></p>
+<h1 id="publication-publique-et--appliquée">18. Publication
+publique et  appliquée</h1>
+<p>La version publiée de ce projet a été préparée pour un dépôt GitHub
+public et un déploiement statique sur Vercel.</p>
+<h2 id="mesures-de--appliquées">Mesures de
+ appliquées</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Élément</th>
+<th>Traitement dans la </th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Adresses IP</td>
+<td>Remplacées par le réseau d’exemple <code>192.168.1.0/24</code></td>
+</tr>
+<tr class="even">
+<td>Adresse du Waveshare</td>
+<td>Exemple <code>192.168.1.200</code></td>
+</tr>
+<tr class="odd">
+<td>Passerelle</td>
+<td>Exemple <code>192.168.1.1</code></td>
+</tr>
+<tr class="even">
+<td>Poste de test</td>
+<td>Exemple <code>192.168.1.50</code></td>
+</tr>
+<tr class="odd">
+<td>Adresses MAC / Device ID</td>
+<td>Masquées dans les captures</td>
+</tr>
+<tr class="even">
+<td>Nom d’utilisateur Windows</td>
+<td>Remplacé par <code>user</code></td>
+</tr>
+<tr class="odd">
+<td>SSID, mots de passe et clés</td>
+<td>Absents du dépôt</td>
+</tr>
+<tr class="even">
+<td>Dashboard domestique</td>
+<td>Limité aux éléments piscine utiles au guide</td>
+</tr>
+<tr class="odd">
+<td>Photos du coffret</td>
+<td>Conservées car nécessaires à la compréhension du câblage ;
+ supprimées</td>
+</tr>
+</tbody>
+</table>
+<p>Les captures VirCom, interface web et PowerShell ont été 
+ou recréées. Les valeurs techniques utiles — ports, paramètres série,
+firmware, fonction Modbus et registres — ont été conservées.</p>
+<h2 id="transparence-technique">Transparence technique</h2>
+<ul>
+<li>Les seuils vert, jaune et rouge du dashboard sont
+<strong>personnalisés</strong> et ne constituent pas une recommandation
+universelle de traitement.</li>
+<li>Les registres pH <code>41203</code> et Redox <code>41303</code> sont
+indiqués comme <strong>confirmés expérimentalement</strong>.</li>
+<li>Les autres registres restent clairement marqués comme
+<strong>candidats non validés par écriture ou modification
+volontaire</strong>.</li>
+<li>L’intégration décrite reste <strong>en lecture seule</strong>.</li>
+<li>Les avertissements relatifs au 230 V, aux produits chimiques et aux
+pompes de dosage sont maintenus.</li>
+</ul>
+<h2 id="métadonnées-de-la-validation">Métadonnées de la validation</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Élément</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Régulateur</td>
+<td>Syclope HydroTouch CHY0444</td>
+</tr>
+<tr class="even">
+<td>Passerelle</td>
+<td>Waveshare RS232/485/422 TO POE ETH (B)</td>
+</tr>
+<tr class="odd">
+<td>Firmware Waveshare</td>
+<td><strong>V1.452</strong></td>
+</tr>
+<tr class="even">
+<td>Date de validation</td>
+<td><strong>11 juillet 2026</strong></td>
+</tr>
+<tr class="odd">
+<td>Transport</td>
+<td>RTU over TCP</td>
+</tr>
+<tr class="even">
+<td>Port de données</td>
+<td>4196</td>
+</tr>
+<tr class="odd">
+<td>Port web observé</td>
+<td>502</td>
+</tr>
+</tbody>
+</table>
+<p>Le fichier <a href="PUBLICATION.md"><code>PUBLICATION.md</code></a>
+récapitule les choix d’ et sert de  avant toute
+nouvelle publication.</p>
+<p>Le bundle est organisé pour une publication :</p>
+<ul>
+<li><code>index.html</code> : site web ;</li>
+<li><code>guide.md</code> : source Markdown ;</li>
+<li><code>assets/</code> : photos, captures  et schémas
+;</li>
+<li><code>scripts/</code> : scripts Python configurables ;</li>
+<li><code>home-assistant/</code> : YAML prêt à adapter ;</li>
+<li><code>data/</code> : données de rétro-ingénierie et rapport
+ ;</li>
+<li><code>PUBLICATION.md</code> : notes de  et de
+publication.</li>
+</ul>
+<h1 id="ressources-téléchargeables">19. Ressources téléchargeables</h1>
+<ul>
+<li><a href="home-assistant/configuration_modbus.yaml">Configuration
+Modbus Home Assistant</a></li>
+<li><a href="home-assistant/dashboard_mushroom.yaml">Carte
+Mushroom</a></li>
+<li><a href="scripts/test_syclope.py">Test minimal Python</a></li>
+<li><a href="scripts/scan_syclope.py">Scanner Modbus en lecture
+seule</a></li>
+<li><a href="scripts/analyse_syclope.py">Analyse des registres</a></li>
+<li><a href="data/register_map.csv">Cartographie des registres</a></li>
+<li><a href="data/syclope_raw_20260711_091323.csv">CSV brut du
+scan</a></li>
+<li><a href="data/syclope_report_20260711_093149.html">Rapport HTML de
+rétro-ingénierie </a></li>
+<li><a href="PUBLICATION.md">Notes de publication et
+</a></li>
+</ul>
+<h1 id="références">20. Références</h1>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>SYCLOPE Electronique, <em>Notice technique HYDRO TOUCH
+pH et Rédox</em>, section 4.5.3.4, raccordement du port RS485 et
+consignes de sécurité. <a
+href="https://www.syclope.fr/wp-content/uploads/2018/07/DOC0370-Notice-technique-HYDRO-TOUCH-pH-Pompe-Redox-Pompe.pdf"
+class="uri">https://www.syclope.fr/wp-content/uploads/2018/07/DOC0370-Notice-technique-HYDRO-TOUCH-pH-Pompe-Redox-Pompe.pdf</a><a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Waveshare, <em>RS232/485/422 TO POE ETH (B) Wiki</em> :
+alimentation 6–36 V/PoE, TCP Server, VirCom, port 4196, fonctions Modbus
+et recommandations de terminaison. <a
+href="https://www.waveshare.com/wiki/RS232/485/422_TO_POE_ETH_%28B%29"
+class="uri">https://www.waveshare.com/wiki/RS232/485/422_TO_POE_ETH_%28B%29</a><a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>MEAN WELL, <em>HDR-15 Series Specification</em>, modèle
+HDR-15-12 : 12 V, 1,25 A, 15 W. <a
+href="https://www.meanwell.com/Upload/PDF/HDR-15/HDR-15-SPEC.PDF"
+class="uri">https://www.meanwell.com/Upload/PDF/HDR-15/HDR-15-SPEC.PDF</a><a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>SYCLOPE Electronique, <em>Notice technique HYDRO TOUCH
+pH et Rédox</em>, section 4.5.3.4, raccordement du port RS485 et
+consignes de sécurité. <a
+href="https://www.syclope.fr/wp-content/uploads/2018/07/DOC0370-Notice-technique-HYDRO-TOUCH-pH-Pompe-Redox-Pompe.pdf"
+class="uri">https://www.syclope.fr/wp-content/uploads/2018/07/DOC0370-Notice-technique-HYDRO-TOUCH-pH-Pompe-Redox-Pompe.pdf</a><a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Waveshare, <em>RS232/485/422 TO POE ETH (B) Wiki</em> :
+alimentation 6–36 V/PoE, TCP Server, VirCom, port 4196, fonctions Modbus
+et recommandations de terminaison. <a
+href="https://www.waveshare.com/wiki/RS232/485/422_TO_POE_ETH_%28B%29"
+class="uri">https://www.waveshare.com/wiki/RS232/485/422_TO_POE_ETH_%28B%29</a><a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Waveshare, <em>RS232/485/422 TO POE ETH (B) Wiki</em> :
+alimentation 6–36 V/PoE, TCP Server, VirCom, port 4196, fonctions Modbus
+et recommandations de terminaison. <a
+href="https://www.waveshare.com/wiki/RS232/485/422_TO_POE_ETH_%28B%29"
+class="uri">https://www.waveshare.com/wiki/RS232/485/422_TO_POE_ETH_%28B%29</a><a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Home Assistant, <em>Modbus integration</em> :
+<code>rtuovertcp</code>, <code>float32</code>, <code>swap: word</code>,
+précision et configuration des capteurs. <a
+href="https://www.home-assistant.io/integrations/modbus/"
+class="uri">https://www.home-assistant.io/integrations/modbus/</a><a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Home Assistant, <em>Modbus integration</em> :
+<code>rtuovertcp</code>, <code>float32</code>, <code>swap: word</code>,
+précision et configuration des capteurs. <a
+href="https://www.home-assistant.io/integrations/modbus/"
+class="uri">https://www.home-assistant.io/integrations/modbus/</a><a
+href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>piitaya, <em>Lovelace Mushroom</em>, installation et
+cartes Template. <a href="https://github.com/piitaya/lovelace-mushroom"
+class="uri">https://github.com/piitaya/lovelace-mushroom</a><a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>SYCLOPE Electronique, <em>Notice technique HYDRO TOUCH
+pH et Rédox</em>, section 4.5.3.4, raccordement du port RS485 et
+consignes de sécurité. <a
+href="https://www.syclope.fr/wp-content/uploads/2018/07/DOC0370-Notice-technique-HYDRO-TOUCH-pH-Pompe-Redox-Pompe.pdf"
+class="uri">https://www.syclope.fr/wp-content/uploads/2018/07/DOC0370-Notice-technique-HYDRO-TOUCH-pH-Pompe-Redox-Pompe.pdf</a><a
+href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

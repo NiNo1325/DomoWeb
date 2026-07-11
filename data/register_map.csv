@@ -1,0 +1,9 @@
+﻿status,measurement,plc_register,zero_based_address,function,data_type,word_order,example_value,notes
+confirmed,pH actuel,41203,1202,03 Holding Registers,float32,CDAB / Home Assistant swap: word,7.1693,Confirmed by direct Python read and match with HydroTouch display.
+confirmed,Redox actuel,41303,1302,03 Holding Registers,float32,CDAB / Home Assistant swap: word,882.35 mV,Confirmed by direct Python read and match with HydroTouch display.
+strong candidate,Consigne pH,41205,1204,03 Holding Registers,float32,CDAB,7.20,Value is coherent but was not verified by changing the setpoint.
+strong candidate,Seuil pH haut,41209,1208,03 Holding Registers,float32,CDAB,8.50,Likely an alarm threshold; not the 7.60 maximum allowed setpoint shown in the setup menu.
+strong candidate,Seuil pH bas,41211,1210,03 Holding Registers,float32,CDAB,6.80,Likely an alarm threshold; not the 6.50 minimum allowed setpoint shown in the setup menu.
+strong candidate,Consigne Redox,41305,1304,03 Holding Registers,float32,CDAB,700 mV,Value is coherent but was not verified by changing the setpoint.
+strong candidate,Seuil Redox haut,41309,1308,03 Holding Registers,float32,CDAB,850 mV,Likely an alarm threshold; not the 800 mV maximum allowed setpoint shown in the setup menu.
+strong candidate,Seuil Redox bas,41311,1310,03 Holding Registers,float32,CDAB,500 mV,Likely an alarm threshold; not the 650 mV minimum allowed setpoint shown in the setup menu.

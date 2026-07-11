@@ -1,0 +1,117 @@
+type: grid
+columns: 2
+square: false
+cards:
+  - type: custom:mushroom-template-card
+    entity: sensor.syclope_ph
+    primary: >
+      {{ states('sensor.syclope_ph') | float(0) | round(2) }} pH
+    secondary: >
+      {% set v = states('sensor.syclope_ph') | float(0) %}
+      {% if not has_value('sensor.syclope_ph') %}
+        Indisponible
+      {% elif v < 6.5 %}
+        Trop bas
+      {% elif v < 6.8 %}
+        Bas — à surveiller
+      {% elif v <= 7.4 %}
+        Zone optimale
+      {% elif v <= 7.6 %}
+        Haut — à surveiller
+      {% else %}
+        Trop haut
+      {% endif %}
+    icon: mdi:ph
+    icon_color: >
+      {% set v = states('sensor.syclope_ph') | float(0) %}
+      {% if not has_value('sensor.syclope_ph') %}
+        grey
+      {% elif 6.8 <= v <= 7.4 %}
+        green
+      {% elif 6.5 <= v <= 7.6 %}
+        amber
+      {% else %}
+        red
+      {% endif %}
+    badge_icon: >
+      {% set v = states('sensor.syclope_ph') | float(0) %}
+      {% if not has_value('sensor.syclope_ph') %}
+        mdi:help
+      {% elif 6.8 <= v <= 7.4 %}
+        mdi:check
+      {% elif 6.5 <= v <= 7.6 %}
+        mdi:alert
+      {% else %}
+        mdi:alert-circle
+      {% endif %}
+    badge_color: >
+      {% set v = states('sensor.syclope_ph') | float(0) %}
+      {% if not has_value('sensor.syclope_ph') %}
+        grey
+      {% elif 6.8 <= v <= 7.4 %}
+        green
+      {% elif 6.5 <= v <= 7.6 %}
+        amber
+      {% else %}
+        red
+      {% endif %}
+    tap_action:
+      action: more-info
+    multiline_secondary: true
+
+  - type: custom:mushroom-template-card
+    entity: sensor.syclope_redox
+    primary: >
+      {{ states('sensor.syclope_redox') | float(0) | round(0) }} mV
+    secondary: >
+      {% set v = states('sensor.syclope_redox') | float(0) %}
+      {% if not has_value('sensor.syclope_redox') %}
+        Indisponible
+      {% elif v < 650 %}
+        Trop bas
+      {% elif v < 700 %}
+        Bas — à surveiller
+      {% elif v <= 780 %}
+        Zone optimale
+      {% elif v <= 800 %}
+        Haut — à surveiller
+      {% else %}
+        Trop haut
+      {% endif %}
+    icon: mdi:lightning-bolt
+    icon_color: >
+      {% set v = states('sensor.syclope_redox') | float(0) %}
+      {% if not has_value('sensor.syclope_redox') %}
+        grey
+      {% elif 700 <= v <= 780 %}
+        green
+      {% elif 650 <= v <= 800 %}
+        amber
+      {% else %}
+        red
+      {% endif %}
+    badge_icon: >
+      {% set v = states('sensor.syclope_redox') | float(0) %}
+      {% if not has_value('sensor.syclope_redox') %}
+        mdi:help
+      {% elif 700 <= v <= 780 %}
+        mdi:check
+      {% elif 650 <= v <= 800 %}
+        mdi:alert
+      {% else %}
+        mdi:alert-circle
+      {% endif %}
+    badge_color: >
+      {% set v = states('sensor.syclope_redox') | float(0) %}
+      {% if not has_value('sensor.syclope_redox') %}
+        grey
+      {% elif 700 <= v <= 780 %}
+        green
+      {% elif 650 <= v <= 800 %}
+        amber
+      {% else %}
+        red
+      {% endif %}
+    tap_action:
+      action: more-info
+    multiline_secondary: true
