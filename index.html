@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NicoDomo — Notes techniques d'intégration domotique</title>
   <meta name="description" content="Retours d'expérience détaillés sur des intégrations domotiques Home Assistant : Modbus, énergie solaire, capteurs. Reproductibles et sourcés." />
-  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <script src="/assets/nav.js?v=2" defer></script>
   <style>
     .eyebrow{
       font-family:var(--sans);
@@ -81,10 +82,22 @@
 <nav class="site-nav" aria-label="Navigation principale">
 <div class="nav-inner">
 <a class="brand" href="/">NicoDomo</a>
-<div class="nav-links">
-<a href="/" aria-current="page">Publications</a>
-<a href="/syclope-hydrotouch">Syclope</a>
-<a href="/winet-extractor">WiNet</a>
+<div class="nav-menu">
+<a class="nav-link" href="/" aria-current="page">Accueil</a>
+<details class="nav-dd">
+<summary>Publications <i class="chev" aria-hidden="true"></i></summary>
+<div class="nav-dd-panel" role="menu">
+<a class="dd-item" role="menuitem" href="/syclope-hydrotouch">
+<span class="dd-title">Syclope HydroTouch dans Home Assistant</span>
+<span class="dd-meta">11 juillet 2026 · Modbus / RS485</span>
+</a>
+<a class="dd-item" role="menuitem" href="/winet-extractor">
+<span class="dd-title">Deux onduleurs Sungrow · WiNet Extractor</span>
+<span class="dd-meta">12 août 2025 · MQTT / solaire</span>
+</a>
+<a class="dd-all" href="/">Toutes les publications →</a>
+</div>
+</details>
 </div>
 </div>
 </nav>

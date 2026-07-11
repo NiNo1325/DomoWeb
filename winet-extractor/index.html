@@ -5,17 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Configurer deux onduleurs Sungrow dans Home Assistant avec WiNet Extractor</title>
   <meta name="description" content="Guide pas à pas : faire tourner deux instances de l'add-on WiNet Extractor via MQTT pour superviser deux onduleurs Sungrow dans Home Assistant." />
-  <link rel="stylesheet" href="/assets/site.css" />
-  <script src="/assets/enhance.js" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <script src="/assets/enhance.js?v=2" defer></script>
+  <script src="/assets/nav.js?v=2" defer></script>
 </head>
 <body>
 <nav class="site-nav" aria-label="Navigation principale">
 <div class="nav-inner">
 <a class="brand" href="/">NicoDomo</a>
-<div class="nav-links">
-<a href="/">Publications</a>
-<a href="/syclope-hydrotouch">Syclope</a>
-<a href="/winet-extractor" aria-current="page">WiNet</a>
+<div class="nav-menu">
+<a class="nav-link" href="/">Accueil</a>
+<details class="nav-dd" data-active>
+<summary>Publications <i class="chev" aria-hidden="true"></i></summary>
+<div class="nav-dd-panel" role="menu">
+<a class="dd-item" role="menuitem" href="/syclope-hydrotouch">
+<span class="dd-title">Syclope HydroTouch dans Home Assistant</span>
+<span class="dd-meta">11 juillet 2026 · Modbus / RS485</span>
+</a>
+<a class="dd-item" role="menuitem" href="/winet-extractor" aria-current="page">
+<span class="dd-title">Deux onduleurs Sungrow · WiNet Extractor</span>
+<span class="dd-meta">12 août 2025 · MQTT / solaire</span>
+</a>
+<a class="dd-all" href="/">Toutes les publications →</a>
+</div>
+</details>
 </div>
 </div>
 </nav>
@@ -154,7 +167,7 @@
 <p class="qa-intro">Une question sur cette intégration&nbsp;? Laissez-la ci-dessous — pas besoin de compte, juste un nom. J'y réponds directement.</p>
 <div id="cusdis_thread" data-page-id="winet-extractor" data-page-title="Configurer deux onduleurs Sungrow avec WiNet Extractor" data-theme="light"></div>
 </section>
-<script src="/assets/comments.js" defer></script>
+<script src="/assets/comments.js?v=2" defer></script>
 <hr />
 <p><strong>Voir aussi&nbsp;:</strong> <a href="/syclope-hydrotouch">Syclope HydroTouch CHY0444 dans Home Assistant</a> · <a href="/">toutes les publications</a>.</p>
 <p class="footnotes">D'après l'article original publié sur <a href="https://medium.com/@nicodomo/configure-two-sungrow-inverters-in-home-assistant-with-winet-extractor-step-by-step-guide-388766f88bbb">Medium</a>. Add-on WiNet Extractor&nbsp;: <a href="https://github.com/NickStallman/home-assistant-repo">NickStallman/home-assistant-repo</a>. Mots-clés&nbsp;: domotique, onduleur, Sungrow, Home Assistant, énergie solaire.</p>

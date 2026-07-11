@@ -67,29 +67,60 @@ body{
 }
 .site-nav .brand:hover{ text-decoration:none; }
 .site-nav .brand:hover::before{ background:#173c5e; }
-/* liens = onglets (même système de libellés que la charte) */
-.site-nav .nav-links{ margin-left:auto; display:flex; gap:1.7em; }
-.site-nav .nav-links a{
-  position:relative; padding:.6em 0;
-  font-family:var(--sans); font-size:.73rem; font-weight:600;
-  text-transform:uppercase; letter-spacing:.11em;
-  color:var(--mut); text-decoration:none; white-space:nowrap;
-  transition:color .12s;
+/* menu (droite) */
+.site-nav .nav-menu{ margin-left:auto; display:flex; align-items:center; gap:1.6em; }
+.nav-link{
+  font-family:var(--sans); font-size:.74rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.1em;
+  color:var(--mut); text-decoration:none; white-space:nowrap; transition:color .12s;
 }
-.site-nav .nav-links a::after{
-  content:""; position:absolute; left:0; right:0; bottom:-1px;
-  height:2px; background:transparent; border-radius:2px; transition:background .12s;
+.nav-link:hover{ color:var(--ink); }
+.nav-link[aria-current="page"]{ color:var(--accent); }
+
+/* menu déroulant « Publications » (élément natif <details>) */
+.nav-dd{ position:relative; }
+.nav-dd > summary{
+  list-style:none; cursor:pointer; display:inline-flex; align-items:center; gap:.5em;
+  font-family:var(--sans); font-size:.74rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.1em; color:var(--mut);
+  white-space:nowrap; user-select:none; transition:color .12s;
 }
-.site-nav .nav-links a:hover{ color:var(--ink); }
-.site-nav .nav-links a:hover::after{ background:var(--line); }
-.site-nav .nav-links a[aria-current="page"]{ color:var(--accent); }
-.site-nav .nav-links a[aria-current="page"]::after{ background:var(--accent); }
+.nav-dd > summary::-webkit-details-marker{ display:none; }
+.nav-dd > summary:hover{ color:var(--ink); }
+.nav-dd[data-active] > summary{ color:var(--accent); }
+.nav-dd .chev{
+  width:.5em; height:.5em; flex:none;
+  border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+  transform:rotate(45deg); margin-top:-.22em; transition:transform .15s;
+}
+.nav-dd[open] .chev{ transform:rotate(-135deg); margin-top:.15em; }
+.nav-dd-panel{
+  position:absolute; right:0; top:calc(100% + .75em);
+  min-width:310px; background:var(--paper);
+  border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 24px 60px -24px rgba(20,30,45,.45);
+  padding:.5em; z-index:40;
+}
+.dd-item{ display:block; padding:.7em .85em; border-radius:8px; text-decoration:none; }
+.dd-item + .dd-item{ margin-top:.1em; }
+.dd-item:hover{ background:var(--accent-soft); }
+.dd-item[aria-current="page"]{ background:var(--accent-soft); }
+.dd-title{ display:block; font-family:var(--serif); font-size:1.02rem; font-weight:650;
+  color:var(--ink); line-height:1.25; }
+.dd-item[aria-current="page"] .dd-title{ color:var(--accent); }
+.dd-meta{ display:block; margin-top:.15em; font-family:var(--sans); font-size:.72rem;
+  letter-spacing:.02em; color:var(--mut); }
+.dd-all{ display:block; margin-top:.3em; padding:.65em .85em;
+  border-top:1px solid var(--line-soft);
+  font-family:var(--sans); font-size:.71rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:.09em; color:var(--accent); text-decoration:none; }
+.dd-all:hover{ text-decoration:underline; }
 @media (max-width:600px){
-  .site-nav .nav-inner{ gap:.7em; padding-left:14px; padding-right:14px; }
+  .site-nav .nav-inner{ gap:.8em; padding-left:16px; padding-right:16px; }
   .site-nav .brand{ font-size:0; gap:0; }              /* masque le logotype, garde le monogramme */
   .site-nav .brand::before{ font-size:15px; }
-  .site-nav .nav-links{ gap:1.1em; }
-  .site-nav .nav-links a{ font-size:.67rem; letter-spacing:.05em; }
+  .site-nav .nav-menu{ gap:1.1em; }
+  .nav-dd-panel{ min-width:min(80vw,310px); }
 }
 
 /* ---- feuille (sheet) : la publication posée sur le "bureau" ---------------- */

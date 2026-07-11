@@ -86,17 +86,30 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="/assets/site.css" />
-  <script src="/assets/enhance.js" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <script src="/assets/enhance.js?v=2" defer></script>
+  <script src="/assets/nav.js?v=2" defer></script>
 </head>
 <body>
 <nav class="site-nav" aria-label="Navigation principale">
 <div class="nav-inner">
 <a class="brand" href="/">NicoDomo</a>
-<div class="nav-links">
-<a href="/">Publications</a>
-<a href="/syclope-hydrotouch" aria-current="page">Syclope</a>
-<a href="/winet-extractor">WiNet</a>
+<div class="nav-menu">
+<a class="nav-link" href="/">Accueil</a>
+<details class="nav-dd" data-active>
+<summary>Publications <i class="chev" aria-hidden="true"></i></summary>
+<div class="nav-dd-panel" role="menu">
+<a class="dd-item" role="menuitem" href="/syclope-hydrotouch" aria-current="page">
+<span class="dd-title">Syclope HydroTouch dans Home Assistant</span>
+<span class="dd-meta">11 juillet 2026 · Modbus / RS485</span>
+</a>
+<a class="dd-item" role="menuitem" href="/winet-extractor">
+<span class="dd-title">Deux onduleurs Sungrow · WiNet Extractor</span>
+<span class="dd-meta">12 août 2025 · MQTT / solaire</span>
+</a>
+<a class="dd-all" href="/">Toutes les publications →</a>
+</div>
+</details>
 </div>
 </div>
 </nav>
@@ -1567,7 +1580,7 @@ href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <p class="qa-intro">Une question sur ce guide&nbsp;? Laissez-la ci-dessous — pas besoin de compte, juste un nom. J'y réponds directement.</p>
 <div id="cusdis_thread" data-page-id="syclope-hydrotouch" data-page-title="Syclope HydroTouch CHY0444 dans Home Assistant" data-theme="light"></div>
 </section>
-<script src="/assets/comments.js" defer></script>
+<script src="/assets/comments.js?v=2" defer></script>
 <hr />
 <p><strong>Voir aussi&nbsp;:</strong> <a href="/winet-extractor">Deux onduleurs Sungrow avec WiNet Extractor</a> · <a href="/">toutes les publications</a>.</p>
 </main>
