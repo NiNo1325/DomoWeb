@@ -3,7 +3,7 @@
    votre projet). Tant que la valeur reste le repère « VOTRE_APP_ID », la
    zone affiche un message d'attente au lieu d'un widget en erreur. */
 (function () {
-  var APP_ID = "VOTRE_APP_ID"; // ← à remplacer par l'App ID Cusdis
+  var APP_ID = "3f88c02e-30f2-4dae-b47c-7d0dc4640438"; // App ID Cusdis (projet NicoDomo)
 
   var el = document.getElementById("cusdis_thread");
   if (!el) return;
