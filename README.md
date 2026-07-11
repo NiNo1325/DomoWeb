@@ -21,7 +21,6 @@ La lecture a été vérifiée simultanément sur l’écran du Syclope et par lo
 - `scripts/` : outils Python de test, scan et analyse
 - `home-assistant/` : configuration Modbus et cartes Mushroom
 - `data/` : scans CSV, rapport de rétro-ingénierie  et cartographie
-- `PUBLICATION.md` : notes de  et  de publication
 - `vercel.json` : configuration de déploiement Vercel
 - `publish.ps1` : publication GitHub + Vercel depuis Windows
 

@@ -39,6 +39,30 @@ body{
 }
 ::selection{ background:var(--accent-soft); }
 
+/* ---- barre de navigation (sticky) ----------------------------------------- */
+.site-nav{
+  position:sticky; top:0; z-index:20;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(1.4) blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.site-nav .nav-inner{
+  max-width:var(--measure);
+  margin:0 auto;
+  padding:.7em clamp(24px,6vw,84px);
+  display:flex; align-items:center; gap:1.4em;
+  font-family:var(--sans); font-size:.9rem;
+}
+.site-nav .brand{
+  font-weight:700; font-size:1.02rem; letter-spacing:-.01em;
+  color:var(--accent); text-decoration:none;
+}
+.site-nav .brand:hover{ text-decoration:none; }
+.site-nav .nav-links{ margin-left:auto; display:flex; flex-wrap:wrap; gap:1.2em; }
+.site-nav .nav-links a{ color:var(--mut); text-decoration:none; }
+.site-nav .nav-links a:hover{ color:var(--accent); }
+.site-nav .nav-links a[aria-current="page"]{ color:var(--accent); font-weight:600; }
+
 /* ---- feuille (sheet) : la publication posée sur le "bureau" ---------------- */
 main{
   counter-reset:figure;
@@ -217,6 +241,13 @@ div.sourceCode pre{ margin:0; }
 /* ---- listes de tâches ----------------------------------------------------- */
 .task-list-item{ list-style:none; }
 .task-list-item input{ margin:0 .5em 0 -1.4em; }
+
+/* ---- zone de questions (Cusdis) ------------------------------------------- */
+.qa{ margin-top:3.6em; padding-top:1.7em; border-top:2px solid var(--accent); }
+.qa-title{ margin:0 0 .3em; font-size:1.5rem; font-weight:650; color:var(--ink); }
+.qa-intro{ margin:0 0 1.5em; color:var(--mut); font-size:.98rem; max-width:70ch; }
+.qa-pending{ font-family:var(--sans); font-size:.9rem; color:var(--mut); }
+#cusdis_thread{ font-family:var(--sans); }
 
 /* ---- responsive ----------------------------------------------------------- */
 @media (max-width:720px){
