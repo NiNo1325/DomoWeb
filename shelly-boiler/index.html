@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Piloter un boiler Atlantic avec un Shelly 1PM Gen4 et Home Assistant</title>
+  <meta name="description" content="Guide complet : câblage 3×230 V sans neutre, mesure réelle de la puissance, intégration locale dans Home Assistant et automatisation heures creuses wallonnes 2026." />
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <script src="/assets/enhance.js?v=2" defer></script>
+  <script src="/assets/nav.js?v=2" defer></script>
+</head>
+<body>
+<nav class="site-nav" aria-label="Navigation principale">
+<div class="nav-inner">
+<a class="brand" href="/">NicoDomo</a>
+<div class="nav-menu">
+<a class="nav-link" href="/">Accueil</a>
+<details class="nav-dd" data-active>
+<summary>Publications <i class="chev" aria-hidden="true"></i></summary>
+<div class="nav-dd-panel" role="menu">
+<a class="dd-item" role="menuitem" href="/shelly-boiler" aria-current="page">
+<span class="dd-title">Boiler Atlantic piloté par Shelly 1PM Gen4</span>
+<span class="dd-meta">14 juillet 2026 · Shelly / heures creuses</span>
+</a>
+<a class="dd-item" role="menuitem" href="/syclope-hydrotouch">
+<span class="dd-title">Syclope HydroTouch dans Home Assistant</span>
+<span class="dd-meta">11 juillet 2026 · Modbus / RS485</span>
+</a>
+<a class="dd-item" role="menuitem" href="/winet-extractor">
+<span class="dd-title">Deux onduleurs Sungrow · WiNet Extractor</span>
+<span class="dd-meta">12 août 2025 · MQTT / solaire</span>
+</a>
+<a class="dd-all" href="/">Toutes les publications →</a>
+</div>
+</details>
+</div>
+</div>
+</nav>
+<main>
+<header id="title-block-header">
+<h1 class="title">Piloter un boiler Atlantic avec un Shelly 1PM Gen4 et Home Assistant</h1>
+<p class="subtitle">Câblage 3×230 V sans neutre, mesure réelle de la puissance, intégration locale et heures creuses wallonnes 2026.</p>
+<p class="date">Nicolas · 14 juillet 2026</p>
+</header>
+
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#1-résultat-final">1. Résultat final</a>
+<ul>
+<li><a href="#ce-qui-est-confirmé-et-ce-qui-doit-encore-être-vérifié-sur-place">Ce qui est confirmé et ce qui doit encore être vérifié sur place</a></li>
+</ul></li>
+<li><a href="#2-le-point-technique-décisif-où-le-shelly-mesure-t-il">2. Le point technique décisif : où le Shelly mesure-t-il ?</a></li>
+<li><a href="#3-sécurité-et-limites">3. Sécurité et limites</a>
+<ul>
+<li><a href="#règles-impératives">Règles impératives</a></li>
+<li><a href="#attention-coupure-monopolaire-en-fonctionnement-normal">Attention : coupure monopolaire en fonctionnement normal</a></li>
+<li><a href="#point-de-contrôle-sur-la-tension">Point de contrôle sur la tension</a></li>
+</ul></li>
+<li><a href="#4-matériel-utilisé">4. Matériel utilisé</a></li>
+<li><a href="#5-schéma-de-câblage-final">5. Schéma de câblage final</a>
+<ul>
+<li><a href="#51-repérage-logique">5.1 Repérage logique</a></li>
+<li><a href="#52-correspondance-avec-le-câblage-réellement-décrit">5.2 Correspondance avec le câblage réellement décrit</a></li>
+<li><a href="#53-raccordement-borne-par-borne">5.3 Raccordement borne par borne</a></li>
+<li><a href="#54-pourquoi-le-contacteur-hager-es220-napparaît-plus">5.4 Pourquoi le contacteur Hager ES220 n’apparaît plus</a></li>
+</ul></li>
+<li><a href="#6-première-boucle-de-vérification-matériel">6. Première boucle de vérification : matériel</a></li>
+<li><a href="#7-mise-en-service-et-configuration-du-shelly">7. Mise en service et configuration du Shelly</a>
+<ul>
+<li><a href="#71-première-connexion">7.1 Première connexion</a></li>
+<li><a href="#72-paramètres-recommandés">7.2 Paramètres recommandés</a></li>
+<li><a href="#73-protections-logicielles-facultatives">7.3 Protections logicielles facultatives</a></li>
+<li><a href="#74-pourquoi-sw-reste-vide">7.4 Pourquoi SW reste vide</a></li>
+</ul></li>
+<li><a href="#8-validation-électrique-et-validation-de-la-mesure">8. Validation électrique et validation de la mesure</a>
+<ul>
+<li><a href="#81-test-off">8.1 Test OFF</a></li>
+<li><a href="#82-test-on-avec-demande-de-chauffe">8.2 Test ON avec demande de chauffe</a></li>
+<li><a href="#83-comprendre-les-différents-états">8.3 Comprendre les différents états</a></li>
+<li><a href="#84-contrôle-thermique">8.4 Contrôle thermique</a></li>
+</ul></li>
+<li><a href="#9-intégration-dans-home-assistant">9. Intégration dans Home Assistant</a>
+<ul>
+<li><a href="#91-ajout-automatique">9.1 Ajout automatique</a></li>
+<li><a href="#92-ajout-manuel">9.2 Ajout manuel</a></li>
+<li><a href="#93-entités-à-identifier">9.3 Entités à identifier</a></li>
+<li><a href="#94-entités-désactivées-par-défaut">9.4 Entités désactivées par défaut</a></li>
+</ul></li>
+<li><a href="#10-heures-creuses-wallonnes-applicables-depuis-2026">10. Heures creuses wallonnes applicables depuis 2026</a></li>
+<li><a href="#11-automatisation-home-assistant">11. Automatisation Home Assistant</a>
+<ul>
+<li><a href="#111-logique-retenue">11.1 Logique retenue</a></li>
+<li><a href="#112-yaml-complet">11.2 YAML complet</a></li>
+<li><a href="#113-installation-via-linterface">11.3 Installation via l’interface</a></li>
+<li><a href="#114-installation-dans-automationsyaml">11.4 Installation dans automations.yaml</a></li>
+<li><a href="#115-fuseau-horaire">11.5 Fuseau horaire</a></li>
+</ul></li>
+<li><a href="#12-capteurs-de-statut-facultatifs">12. Capteurs de statut facultatifs</a></li>
+<li><a href="#13-dashboard-home-assistant">13. Dashboard Home Assistant</a></li>
+<li><a href="#14-ajout-au-tableau-de-bord-énergie">14. Ajout au tableau de bord Énergie</a></li>
+<li><a href="#15-deuxième-boucle-de-vérification-home-assistant">15. Deuxième boucle de vérification : Home Assistant</a></li>
+<li><a href="#16-dépannage">16. Dépannage</a></li>
+<li><a href="#17-fiabilisation-pour-une-installation-durable">17. Fiabilisation pour une installation durable</a>
+<ul>
+<li><a href="#électricité">Électricité</a></li>
+<li><a href="#réseau">Réseau</a></li>
+<li><a href="#home-assistant">Home Assistant</a></li>
+</ul></li>
+<li><a href="#18-température-de-leau-ce-qui-est-disponible-et-ce-qui-ne-lest-pas">18. Température de l’eau : ce qui est disponible et ce qui ne l’est pas</a></li>
+<li><a href="#19-références-officielles">19. Références officielles</a></li>
+</ul></nav>
+
+<blockquote>
+<p><strong>Retour d’expérience documenté.</strong> Ce guide décrit l’installation finale réellement retenue pour un boiler <strong>Atlantic 200 L — 2200 W — 230 V</strong>, alimenté sur un réseau belge <strong>3×230 V sans neutre</strong>, avec un <strong>Shelly 1PM Gen4</strong> et Home Assistant.<br>La particularité essentielle est que le courant du boiler traverse directement la sortie <strong>O</strong> du Shelly. C’est indispensable pour obtenir la puissance et l’énergie réelles : le Shelly 1PM Gen4 mesure la charge raccordée à <strong>O</strong>, et non un courant simplement repris sur les bornes <strong>L</strong>.</p>
+</blockquote>
+<h1 id="1-résultat-final">1. Résultat final</h1>
+<p>L’architecture obtenue est la suivante :</p>
+<figure>
+<img src="/shelly-boiler/assets/architecture.svg" alt="Architecture générale" />
+<figcaption>Architecture générale</figcaption>
+</figure>
+<p>Le système permet :</p>
+<ul>
+<li>d’allumer et de couper le boiler depuis Home Assistant ;</li>
+<li>de mesurer la puissance instantanée en watts ;</li>
+<li>d’historiser l’énergie en kWh ;</li>
+<li>d’ajouter le boiler au tableau de bord Énergie ;</li>
+<li>de l’autoriser uniquement pendant les heures creuses wallonnes 2026 : <strong>11 h–17 h</strong> et <strong>22 h–7 h</strong>, tous les jours ;</li>
+<li>de laisser le thermostat et la sécurité thermique d’origine du boiler assurer la régulation locale.</li>
+</ul>
+<h2 id="ce-qui-est-confirmé-et-ce-qui-doit-encore-être-vérifié-sur-place">Ce qui est confirmé et ce qui doit encore être vérifié sur place</h2>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Boiler</td>
+<td>Atlantic, 200 L, 2200 W, 230 V, code visible 154320</td>
+</tr>
+<tr>
+<td>Réseau</td>
+<td>3×230 V sans neutre</td>
+</tr>
+<tr>
+<td>Courant nominal</td>
+<td>Environ 9,6 A à 230 V</td>
+</tr>
+<tr>
+<td>Module</td>
+<td>Shelly 1PM Gen4, 16 A</td>
+</tr>
+<tr>
+<td>Mesure de puissance</td>
+<td>Uniquement sur la sortie <code>O</code></td>
+</tr>
+<tr>
+<td>Montage final</td>
+<td>Sans contacteur : boiler directement derrière <code>O</code></td>
+</tr>
+<tr>
+<td>Entrée <code>SW</code></td>
+<td>Non utilisée, laissée vide</td>
+</tr>
+<tr>
+<td>Protection requise</td>
+<td>Disjoncteur bipolaire max. 16 A, courbe B ou C, ≥ 6 kA selon Shelly</td>
+</tr>
+<tr>
+<td>Entité de commande HA</td>
+<td>Probablement <code>switch.boiler_etage</code>, à confirmer dans votre registre d’entités</td>
+</tr>
+<tr>
+<td>Entités de puissance/énergie</td>
+<td>Leur identifiant exact doit être copié depuis Home Assistant</td>
+</tr>
+</tbody></table>
+<h1 id="2-le-point-technique-décisif-où-le-shelly-mesure-t-il">2. Le point technique décisif : où le Shelly mesure-t-il ?</h1>
+<p>Le Shelly 1PM Gen4 possède trois bornes <code>L</code>, deux bornes <code>N</code>, une entrée <code>SW</code> et une sortie <code>O</code>.</p>
+<p>Les bornes multiples <code>L</code> et <code>N</code> servent à l’alimentation et au repiquage. Elles ne constituent pas un compteur traversant indépendant. Le schéma interne officiel place l’ampèremètre dans le chemin de la sortie <code>O</code>.</p>
+<p>Cela explique le comportement observé lors du premier montage avec le contacteur Hager ES220 :</p>
+<ul>
+<li>le boiler passait par le contacteur ;</li>
+<li>seule la bobine du contacteur était raccordée à <code>O</code> ;</li>
+<li>le Shelly affichait environ <strong>2,2 W</strong>, soit la consommation de la bobine ;</li>
+<li>la résistance de 2200 W restait invisible.</li>
+</ul>
+<p>La solution finale a donc consisté à retirer le contacteur du circuit de puissance et à raccorder directement la phase du boiler à <code>O</code>. Lorsque le thermostat réclame de la chaleur, la mesure attendue est désormais de l’ordre de <strong>2,0 à 2,6 kW</strong>, selon la tension réelle et la résistance de chauffe.</p>
+<h1 id="3-sécurité-et-limites">3. Sécurité et limites</h1>
+<p>Cette installation manipule du <strong>230 V entre deux phases actives</strong>. Une erreur peut provoquer électrocution, incendie ou détérioration du boiler et du Shelly.</p>
+<h2 id="règles-impératives">Règles impératives</h2>
+<ol>
+<li>Faire réaliser ou valider le câblage par une personne qualifiée.</li>
+<li>Couper le disjoncteur bipolaire du circuit et le consigner avant toute intervention.</li>
+<li>Vérifier l’absence de tension avec un appareil adapté ; ne pas se fier à l’état OFF du Shelly.</li>
+<li>Ne jamais appeler le conducteur raccordé à <code>N</code> « neutre » dans cette installation : il s’agit de <strong>L2</strong>, une phase active.</li>
+<li>Identifier physiquement les conducteurs <code>L1</code>, <code>L2</code> et <code>PE</code>, sans se fier uniquement aux couleurs.</li>
+<li>Utiliser une protection amont conforme aux exigences du Shelly : <strong>maximum 16 A</strong>, courbe B ou C, pouvoir de coupure minimal <strong>6 kA</strong>, classe de limitation 3.</li>
+<li>Installer le Shelly dans un coffret électrique fermé, propre et accessible, avec maintien des câbles et sans contact direct avec la mousse isolante.</li>
+<li>Respecter la température ambiante documentée du Shelly, limitée à <strong>40 °C</strong>. Un grenier peut dépasser cette valeur en été.</li>
+<li>Utiliser des conducteurs et raccords adaptés au circuit, avec embouts lorsque nécessaire.</li>
+<li>Conserver la terre du boiler en liaison directe ; elle ne traverse jamais le Shelly.</li>
+</ol>
+<h2 id="attention-coupure-monopolaire-en-fonctionnement-normal">Attention : coupure monopolaire en fonctionnement normal</h2>
+<p>Le Shelly coupe uniquement <code>L1</code>. <code>L2</code> reste raccordée directement au boiler. Le boiler peut donc encore présenter une tension dangereuse par rapport à la terre lorsque le Shelly est OFF.</p>
+<p><strong>Le Shelly OFF est une commande fonctionnelle, pas un dispositif d’isolement.</strong> Le seul moyen de rendre le circuit sûr pour une intervention est de couper le disjoncteur bipolaire et de contrôler l’absence de tension.</p>
+<h2 id="point-de-contrôle-sur-la-tension">Point de contrôle sur la tension</h2>
+<p>Une capture de l’application a montré environ <strong>250,8 V</strong>. La documentation du Shelly indique une alimentation 110–240 V AC et une tension de commutation maximale de 240 V AC. La tension doit être contrôlée avec un multimètre approprié. Si une valeur durablement supérieure à la plage documentée est confirmée, demander l’avis de Shelly et d’un électricien avant de considérer le montage permanent.</p>
+<h1 id="4-matériel-utilisé">4. Matériel utilisé</h1>
+<table>
+<thead>
+<tr>
+<th>Équipement</th>
+<th>Caractéristique</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Boiler</td>
+<td>Atlantic 200 L, 2200 W, 230 V</td>
+<td>Production d’eau chaude</td>
+</tr>
+<tr>
+<td>Relais/compteur</td>
+<td>Shelly 1PM Gen4</td>
+<td>Commande, puissance, énergie</td>
+</tr>
+<tr>
+<td>Protection</td>
+<td>Disjoncteur bipolaire C16, ≥ 6 kA</td>
+<td>Protection du circuit et du Shelly</td>
+</tr>
+<tr>
+<td>Coffret</td>
+<td>Coffret électrique adapté</td>
+<td>Protection mécanique et isolation</td>
+</tr>
+<tr>
+<td>Bornes</td>
+<td>Borniers ou connecteurs adaptés</td>
+<td>Répartition L2 et raccordements</td>
+</tr>
+<tr>
+<td>Câble</td>
+<td>Section validée pour le circuit, généralement 2,5 mm²</td>
+<td>Alimentation du boiler</td>
+</tr>
+<tr>
+<td>Réseau</td>
+<td>Wi‑Fi local</td>
+<td>Liaison vers Home Assistant</td>
+</tr>
+<tr>
+<td>Supervision</td>
+<td>Home Assistant + intégration Shelly</td>
+<td>Automatisation et historique</td>
+</tr>
+</tbody></table>
+<p>Le Shelly accepte des conducteurs de 0,5 à 4 mm², demande un dénudage de 6 à 7 mm et annonce un couple maximal de 0,4 Nm sur ses bornes. Respecter la notice du fabricant et la nature exacte des conducteurs utilisés.</p>
+<h1 id="5-schéma-de-câblage-final">5. Schéma de câblage final</h1>
+<figure>
+<img src="/shelly-boiler/assets/wiring-3x230.svg" alt="Schéma de câblage 3×230 V" />
+<figcaption>Schéma de câblage 3×230 V</figcaption>
+</figure>
+<h2 id="51-repérage-logique">5.1 Repérage logique</h2>
+<p>Le schéma utilise les noms fonctionnels suivants :</p>
+<ul>
+<li><code>L1</code> : phase qui entre sur <code>L</code> du Shelly ;</li>
+<li><code>L2</code> : seconde phase, raccordée à <code>N</code> du Shelly et directement au boiler ;</li>
+<li><code>O</code> : sortie commutée et mesurée vers le boiler ;</li>
+<li><code>PE</code> : conducteur de protection ;</li>
+<li><code>SW</code> : entrée locale facultative, non utilisée ici.</li>
+</ul>
+<h2 id="52-correspondance-avec-le-câblage-réellement-décrit">5.2 Correspondance avec le câblage réellement décrit</h2>
+<p>Dans l’installation photographiée :</p>
+<ul>
+<li>le fil rouge arrivant sur <code>L</code> correspond à <code>L1</code> ;</li>
+<li>le fil brun venant du tableau correspond à <code>L2</code> ;</li>
+<li>les fils noirs pontés correspondent également à <code>L2</code> ;</li>
+<li>la sortie <code>O</code> repart vers la phase du boiler ;</li>
+<li><code>SW</code> reste vide.</li>
+</ul>
+<p>Ces couleurs sont propres à cette installation et ne doivent pas être reproduites aveuglément ailleurs.</p>
+<h2 id="53-raccordement-borne-par-borne">5.3 Raccordement borne par borne</h2>
+<table>
+<thead>
+<tr>
+<th>Borne</th>
+<th>Raccordement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shelly <code>L</code></td>
+<td><code>L1</code> en provenance du disjoncteur bipolaire</td>
+</tr>
+<tr>
+<td>Shelly <code>N</code></td>
+<td><code>L2</code> en provenance du disjoncteur bipolaire</td>
+</tr>
+<tr>
+<td>Shelly <code>O</code></td>
+<td>conducteur vers la première borne d’alimentation du boiler</td>
+</tr>
+<tr>
+<td>Shelly <code>SW</code></td>
+<td>vide</td>
+</tr>
+<tr>
+<td>Boiler, autre borne</td>
+<td><code>L2</code> direct</td>
+</tr>
+<tr>
+<td>Boiler, terre</td>
+<td><code>PE</code> direct</td>
+</tr>
+</tbody></table>
+<h2 id="54-pourquoi-le-contacteur-hager-es220-napparaît-plus">5.4 Pourquoi le contacteur Hager ES220 n’apparaît plus</h2>
+<p>Le contacteur était électriquement utile pour décharger le relais du Shelly, mais il empêchait le 1PM de mesurer la résistance du boiler : seule sa bobine était visible sur <code>O</code>.</p>
+<p>Le montage final documenté ici privilégie :</p>
+<ul>
+<li>un seul module ;</li>
+<li>la mesure réelle ;</li>
+<li>une charge résistive d’environ 9,6 A, inférieure à la limite de 16 A annoncée par Shelly.</li>
+</ul>
+<p>Cette décision impose en contrepartie le respect strict de la protection C16, de la température ambiante et du montage en coffret.</p>
+<h1 id="6-première-boucle-de-vérification-matériel">6. Première boucle de vérification : matériel</h1>
+<p>Avant de remettre sous tension :</p>
+<ul>
+<li><input disabled="" type="checkbox"> disjoncteur final bipolaire C16, ≥ 6 kA ;</li>
+<li><input disabled="" type="checkbox"> contacteur ES220 absent du chemin final ;</li>
+<li><input disabled="" type="checkbox"> <code>L1</code> raccordée à <code>L</code> du Shelly ;</li>
+<li><input disabled="" type="checkbox"> <code>L2</code> raccordée à <code>N</code> du Shelly et à la seconde borne du boiler ;</li>
+<li><input disabled="" type="checkbox"> <code>O</code> raccordée uniquement à la phase commutée du boiler ;</li>
+<li><input disabled="" type="checkbox"> <code>SW</code> vide ;</li>
+<li><input disabled="" type="checkbox"> terre directe et intacte ;</li>
+<li><input disabled="" type="checkbox"> aucun cuivre nu hors bornier ;</li>
+<li><input disabled="" type="checkbox"> conducteurs serrés au couple approprié ;</li>
+<li><input disabled="" type="checkbox"> câbles maintenus sans traction sur le Shelly ;</li>
+<li><input disabled="" type="checkbox"> coffret fermé et dégagé de la mousse ;</li>
+<li><input disabled="" type="checkbox"> aucun conducteur actif improprement identifié comme neutre.</li>
+</ul>
+<h1 id="7-mise-en-service-et-configuration-du-shelly">7. Mise en service et configuration du Shelly</h1>
+<h2 id="71-première-connexion">7.1 Première connexion</h2>
+<p>Deux méthodes sont possibles :</p>
+<ol>
+<li>ajouter le module avec l’application Shelly Smart Control ;</li>
+<li>se connecter au point d’accès <code>Shelly1PMG4-…</code>, puis ouvrir <code>192.168.33.1</code>.</li>
+</ol>
+<p>Configurer le Wi‑Fi local, puis réserver une adresse IP dans le routeur ou attribuer une IP statique cohérente avec le réseau.</p>
+<h2 id="72-paramètres-recommandés">7.2 Paramètres recommandés</h2>
+<p>Dans l’interface locale :</p>
+<ul>
+<li><strong>Device name</strong> : <code>Boiler Etage</code> ;</li>
+<li><strong>Output name</strong> : <code>Boiler Etage</code> ;</li>
+<li><strong>Action on power on</strong> : <code>Turn OFF</code> pour un comportement sûr après coupure ;</li>
+<li><strong>Input/SW</strong> : désactivé ou laissé sans usage ;</li>
+<li><strong>Timers</strong> : désactivés ;</li>
+<li><strong>Schedules natifs Shelly</strong> : désactivés si Home Assistant est la source de vérité ;</li>
+<li><strong>Timezone</strong> : Europe/Brussels ;</li>
+<li><strong>Firmware</strong> : dernière version stable ;</li>
+<li><strong>Authentication locale</strong> : activée avec un mot de passe robuste ;</li>
+<li><strong>Cloud</strong> : facultatif, Home Assistant communique localement ;</li>
+<li><strong>MQTT</strong> : inutile pour l’intégration Shelly native.</li>
+</ul>
+<h2 id="73-protections-logicielles-facultatives">7.3 Protections logicielles facultatives</h2>
+<p>Le Shelly permet de configurer une limite de puissance et de courant. Ces limites ne remplacent jamais le disjoncteur.</p>
+<p>Pour un boiler de 2200 W, une valeur d’alerte autour de 3000 W et une limite de courant conservatrice peuvent servir de protection supplémentaire, mais elles doivent être déterminées après mesure de la tension et du courant réels. Éviter un seuil trop proche de la consommation normale, surtout si la tension réseau est élevée.</p>
+<h2 id="74-pourquoi-sw-reste-vide">7.4 Pourquoi <code>SW</code> reste vide</h2>
+<p><code>SW</code> est uniquement une entrée de commande physique. Le Shelly est alimenté par <code>L1</code> et <code>L2</code>, puis commandé par l’application ou Home Assistant. Il n’a pas besoin d’une phase sur <code>SW</code> pour être considéré comme allumé.</p>
+<p>Un bouton pourrait être ajouté ultérieurement entre <code>L1</code> et <code>SW</code>, mais il ne fait pas partie du montage final documenté.</p>
+<h1 id="8-validation-électrique-et-validation-de-la-mesure">8. Validation électrique et validation de la mesure</h1>
+<h2 id="81-test-off">8.1 Test OFF</h2>
+<ol>
+<li>remettre sous tension le disjoncteur ;</li>
+<li>attendre le démarrage du Shelly ;</li>
+<li>laisser le relais OFF ;</li>
+<li>vérifier une puissance proche de 0 W.</li>
+</ol>
+<p>Le Shelly lui-même consomme moins de 1 W selon sa documentation. Une petite valeur résiduelle peut apparaître selon l’affichage et l’état du circuit.</p>
+<h2 id="82-test-on-avec-demande-de-chauffe">8.2 Test ON avec demande de chauffe</h2>
+<ol>
+<li>mettre le Shelly ON ;</li>
+<li>s’assurer que le boiler n’est pas déjà complètement chaud ;</li>
+<li>observer la puissance.</li>
+</ol>
+<p>Résultat attendu lorsque la résistance chauffe :</p>
+<ul>
+<li>courant proche de 9 à 11 A ;</li>
+<li>puissance de l’ordre de 2000 à 2600 W ;</li>
+<li>énergie augmentant d’environ 2,2 kWh après une heure de chauffe nominale.</li>
+</ul>
+<h2 id="83-comprendre-les-différents-états">8.3 Comprendre les différents états</h2>
+<table>
+<thead>
+<tr>
+<th>Relais Shelly</th>
+<th align="right">Puissance</th>
+<th>Interprétation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OFF</td>
+<td align="right">≈ 0 W</td>
+<td>Boiler coupé par Home Assistant/Shelly</td>
+</tr>
+<tr>
+<td>ON</td>
+<td align="right">≈ 0 W</td>
+<td>Boiler alimenté, thermostat satisfait ou sécurité ouverte</td>
+</tr>
+<tr>
+<td>ON</td>
+<td align="right">≈ 2,0–2,6 kW</td>
+<td>Résistance en chauffe</td>
+</tr>
+<tr>
+<td>ON</td>
+<td align="right">≈ 2 W avec contacteur</td>
+<td>Seule la bobine du contacteur est mesurée : ancien montage</td>
+</tr>
+</tbody></table>
+<h2 id="84-contrôle-thermique">8.4 Contrôle thermique</h2>
+<p>Pendant une chauffe complète :</p>
+<ul>
+<li>contrôler l’absence d’odeur ou de bruit anormal ;</li>
+<li>vérifier que les bornes ne chauffent pas ;</li>
+<li>consulter la température interne du Shelly ;</li>
+<li>contrôler l’ambiance du coffret ;</li>
+<li>arrêter immédiatement si le module ou les connexions deviennent anormalement chauds.</li>
+</ul>
+<p>Refaire un contrôle visuel et thermique après quelques cycles et après une période chaude dans le grenier.</p>
+<h1 id="9-intégration-dans-home-assistant">9. Intégration dans Home Assistant</h1>
+<p>Home Assistant prend en charge les quatre générations de Shelly et peut découvrir automatiquement le module. Les appareils Gen2+ utilisent le protocole RPC et communiquent directement sur le réseau local ; le cloud Shelly n’est pas requis.</p>
+<h2 id="91-ajout-automatique">9.1 Ajout automatique</h2>
+<p>Dans Home Assistant :</p>
+<ol>
+<li>ouvrir <strong>Paramètres → Appareils et services</strong> ;</li>
+<li>rechercher la carte <strong>Découvert</strong> correspondant au Shelly ;</li>
+<li>cliquer sur <strong>Configurer</strong> ;</li>
+<li>attribuer la zone appropriée, par exemple <code>Grenier</code> ou <code>Étage</code>.</li>
+</ol>
+<h2 id="92-ajout-manuel">9.2 Ajout manuel</h2>
+<p>Si le module n’est pas découvert :</p>
+<ol>
+<li><strong>Paramètres → Appareils et services</strong> ;</li>
+<li><strong>Ajouter une intégration</strong> ;</li>
+<li>choisir <strong>Shelly</strong> ;</li>
+<li>saisir l’adresse IP locale du module.</li>
+</ol>
+<h2 id="93-entités-à-identifier">9.3 Entités à identifier</h2>
+<p>Les identifiants exacts dépendent du nom attribué au module et de l’historique du registre d’entités. Rechercher <code>boiler</code> ou <code>shelly</code> dans <strong>Outils de développement → États</strong>.</p>
+<p>Il faut retrouver au minimum :</p>
+<ul>
+<li>un <code>switch</code> pour la sortie ;</li>
+<li>un capteur de puissance en W ;</li>
+<li>un capteur d’énergie en Wh ou kWh ;</li>
+<li>éventuellement courant, tension et fréquence.</li>
+</ul>
+<p>Le guide et les fichiers YAML utilisent par défaut :</p>
+<pre><code class="language-text">switch.boiler_etage
+sensor.boiler_etage_power
+sensor.boiler_etage_energy
+</code></pre>
+<p>Remplacer ces identifiants s’ils diffèrent dans votre installation.</p>
+<h2 id="94-entités-désactivées-par-défaut">9.4 Entités désactivées par défaut</h2>
+<p>Pour les Shelly Gen2+, Home Assistant peut désactiver par défaut :</p>
+<ul>
+<li>la température interne du module ;</li>
+<li>le RSSI Wi‑Fi ;</li>
+<li>l’uptime.</li>
+</ul>
+<p>Depuis la page de l’appareil, ouvrir la liste des entités, afficher les entités désactivées et activer au minimum la température interne si elle est utile pour surveiller le coffret du grenier.</p>
+<h1 id="10-heures-creuses-wallonnes-applicables-depuis-2026">10. Heures creuses wallonnes applicables depuis 2026</h1>
+<p>Depuis le 1er janvier 2026, ORES indique les plages suivantes pour le tarif bihoraire :</p>
+<table>
+<thead>
+<tr>
+<th>Période</th>
+<th>Horaire</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Heures pleines</td>
+<td>07:00–11:00 et 17:00–22:00</td>
+</tr>
+<tr>
+<td>Heures creuses</td>
+<td>11:00–17:00 et 22:00–07:00</td>
+</tr>
+</tbody></table>
+<p>Ces plages sont identiques les sept jours de la semaine. Le week-end n’est donc plus entièrement en heures creuses comme en 2025.</p>
+<p>Le guide encode ces horaires. Vérifier néanmoins sur la facture annuelle que le point de fourniture est bien en régime bihoraire et que la mise à jour 2026 du compteur a été appliquée.</p>
+<h1 id="11-automatisation-home-assistant">11. Automatisation Home Assistant</h1>
+<p>Le fichier prêt à adapter est fourni ici :</p>
+<p><code>home-assistant/automation_heures_creuses.yaml</code></p>
+<h2 id="111-logique-retenue">11.1 Logique retenue</h2>
+<p>L’automatisation :</p>
+<ul>
+<li>allume le boiler à 11:00 et 22:00 ;</li>
+<li>le coupe à 17:00 et 07:00 ;</li>
+<li>se resynchronise au démarrage de Home Assistant ;</li>
+<li>se resynchronise lorsque le Shelly revient après une indisponibilité ;</li>
+<li>coupe immédiatement un allumage manuel effectué pendant les heures pleines.</li>
+</ul>
+<p>Le thermostat Atlantic reste responsable de la demande de chauffe. Pendant une plage creuse, le switch peut donc être ON alors que la puissance reste à 0 W parce que l’eau a atteint la consigne.</p>
+<h2 id="112-yaml-complet">11.2 YAML complet</h2>
+<pre><code class="language-yaml"># Remplacer switch.boiler_etage si l&#39;entité porte un autre identifiant.
+# Plages ORES/Wallonie applicables depuis le 1er janvier 2026 :
+# heures creuses tous les jours de 11:00 à 17:00 et de 22:00 à 07:00.
+
+- id: boiler_etage_heures_creuses_wallonie_2026
+  alias: &quot;Boiler étage - heures creuses Wallonie 2026&quot;
+  description: &gt;-
+    Alimente le boiler pendant les heures creuses wallonnes 2026 et le coupe
+    pendant les heures pleines. Un allumage manuel hors heures creuses est
+    immédiatement annulé.
+  mode: single
+
+  triggers:
+    - trigger: time
+      at:
+        - &quot;07:00:00&quot;
+        - &quot;11:00:00&quot;
+        - &quot;17:00:00&quot;
+        - &quot;22:00:00&quot;
+
+    - trigger: homeassistant
+      event: start
+
+    # Resynchronisation après le redémarrage ou la reconnexion du Shelly.
+    - trigger: state
+      entity_id: switch.boiler_etage
+      from: &quot;unavailable&quot;
+
+    - trigger: state
+      entity_id: switch.boiler_etage
+      from: &quot;unknown&quot;
+
+    # Garde-fou : interdit un allumage manuel pendant les heures pleines.
+    - trigger: state
+      entity_id: switch.boiler_etage
+      to: &quot;on&quot;
+
+  conditions: []
+
+  actions:
+    - variables:
+        is_off_peak: &gt;-
+          {% set m = now().hour * 60 + now().minute %}
+          {{ (660 &lt;= m &lt; 1020) or (m &gt;= 1320) or (m &lt; 420) }}
+
+    - choose:
+        - conditions:
+            - condition: template
+              value_template: &quot;{{ is_off_peak | bool }}&quot;
+          sequence:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.boiler_etage
+      default:
+        - action: switch.turn_off
+          target:
+            entity_id: switch.boiler_etage
+</code></pre>
+<h2 id="113-installation-via-linterface">11.3 Installation via l’interface</h2>
+<ol>
+<li>ouvrir <strong>Paramètres → Automatisations et scènes</strong> ;</li>
+<li>créer une nouvelle automatisation vide ;</li>
+<li>ouvrir le menu à trois points ;</li>
+<li>choisir <strong>Modifier en YAML</strong> ;</li>
+<li>copier le contenu de l’élément d’automatisation sans le premier tiret de liste si l’éditeur l’exige ;</li>
+<li>remplacer <code>switch.boiler_etage</code> par l’identifiant réel ;</li>
+<li>enregistrer ;</li>
+<li>exécuter manuellement l’automatisation pour vérifier son comportement.</li>
+</ol>
+<h2 id="114-installation-dans-automationsyaml">11.4 Installation dans <code>automations.yaml</code></h2>
+<p>Ajouter le bloc complet du fichier fourni à <code>automations.yaml</code>, puis :</p>
+<ol>
+<li>vérifier la configuration ;</li>
+<li>recharger les automatisations ;</li>
+<li>contrôler les traces de l’automatisation.</li>
+</ol>
+<h2 id="115-fuseau-horaire">11.5 Fuseau horaire</h2>
+<p>Dans <strong>Paramètres → Système → Général</strong>, vérifier que Home Assistant utilise <code>Europe/Brussels</code>. Les heures du YAML sont interprétées dans le fuseau de Home Assistant et suivent automatiquement les changements heure d’été/heure d’hiver.</p>
+<h1 id="12-capteurs-de-statut-facultatifs">12. Capteurs de statut facultatifs</h1>
+<p>Le fichier suivant ajoute :</p>
+<ul>
+<li>un capteur binaire indiquant si l’heure courante est creuse ;</li>
+<li>un capteur binaire indiquant si le boiler chauffe réellement, défini par une puissance supérieure à 100 W.</li>
+</ul>
+<p><code>home-assistant/template_sensors.yaml</code></p>
+<p>Avant utilisation, remplacer l’entité de puissance par l’identifiant réel.</p>
+<pre><code class="language-yaml"># À intégrer sous la clé `template:` de configuration.yaml, ou dans un fichier
+# inclus par votre configuration. Le premier capteur ne dépend d&#39;aucune entité.
+# Pour le deuxième, remplacer sensor.boiler_etage_power par l&#39;entité de puissance réelle.
+
+template:
+  - binary_sensor:
+      - name: &quot;Heures creuses Wallonie 2026&quot;
+        unique_id: heures_creuses_wallonie_2026
+        icon: mdi:clock-check-outline
+        state: &gt;-
+          {% set m = now().hour * 60 + now().minute %}
+          {{ (660 &lt;= m &lt; 1020) or (m &gt;= 1320) or (m &lt; 420) }}
+
+      - name: &quot;Boiler étage en chauffe&quot;
+        unique_id: boiler_etage_en_chauffe
+        icon: mdi:water-boiler
+        availability: &quot;{{ has_value(&#39;sensor.boiler_etage_power&#39;) }}&quot;
+        state: &quot;{{ states(&#39;sensor.boiler_etage_power&#39;) | float(0) &gt; 100 }}&quot;
+</code></pre>
+<h1 id="13-dashboard-home-assistant">13. Dashboard Home Assistant</h1>
+<p>Le fichier Mushroom est fourni ici :</p>
+<p><code>home-assistant/dashboard_mushroom.yaml</code></p>
+<p>Il affiche :</p>
+<ul>
+<li>l’état de la sortie ;</li>
+<li>la puissance instantanée ;</li>
+<li>la distinction entre « alimenté, thermostat satisfait » et « chauffe en cours » ;</li>
+<li>la période tarifaire ;</li>
+<li>un graphique sur 24 heures.</li>
+</ul>
+<p>Remplacer les identifiants d’entités avant de coller le YAML.</p>
+<pre><code class="language-yaml"># Carte Mushroom. Adapter les trois entity_id aux entités réellement créées
+# par l&#39;intégration Shelly : switch, puissance instantanée et énergie totale.
+
+type: vertical-stack
+cards:
+  - type: custom:mushroom-template-card
+    entity: switch.boiler_etage
+    primary: Boiler étage
+    secondary: &gt;-
+      {% set p = states(&#39;sensor.boiler_etage_power&#39;) | float(0) %}
+      {% set m = now().hour * 60 + now().minute %}
+      {% set hc = (660 &lt;= m &lt; 1020) or (m &gt;= 1320) or (m &lt; 420) %}
+      {% if is_state(&#39;switch.boiler_etage&#39;, &#39;off&#39;) %}
+        Coupé — {{ &#39;heures creuses&#39; if hc else &#39;heures pleines&#39; }}
+      {% elif p &gt; 100 %}
+        Chauffe en cours — {{ p | round(0) }} W
+      {% else %}
+        Alimenté — thermostat satisfait
+      {% endif %}
+    icon: mdi:water-boiler
+    icon_color: &gt;-
+      {% set p = states(&#39;sensor.boiler_etage_power&#39;) | float(0) %}
+      {% if is_state(&#39;switch.boiler_etage&#39;, &#39;off&#39;) %}
+        grey
+      {% elif p &gt; 100 %}
+        orange
+      {% else %}
+        blue
+      {% endif %}
+    tap_action:
+      action: more-info
+
+  - type: entities
+    title: Mesures du boiler
+    entities:
+      - entity: switch.boiler_etage
+        name: Alimentation
+      - entity: sensor.boiler_etage_power
+        name: Puissance instantanée
+      - entity: sensor.boiler_etage_energy
+        name: Énergie totale
+      - entity: binary_sensor.heures_creuses_wallonie_2026
+        name: Période tarifaire
+
+  - type: history-graph
+    title: Puissance — dernières 24 heures
+    hours_to_show: 24
+    entities:
+      - entity: sensor.boiler_etage_power
+        name: Boiler étage
+</code></pre>
+<h1 id="14-ajout-au-tableau-de-bord-énergie">14. Ajout au tableau de bord Énergie</h1>
+<p>Si le Shelly fournit directement une entité d’énergie totale compatible :</p>
+<ol>
+<li>ouvrir <strong>Paramètres → Tableaux de bord → Énergie</strong> ;</li>
+<li>aller dans <strong>Appareils individuels</strong> ;</li>
+<li>ajouter le capteur d’énergie du boiler ;</li>
+<li>vérifier l’unité, généralement kWh ;</li>
+<li>attendre le prochain cycle statistique.</li>
+</ol>
+<p>Si seule une puissance en watts est disponible, Home Assistant peut créer un capteur d’énergie par intégration mathématique de la puissance. Le Shelly 1PM fournit normalement une énergie native ; privilégier cette entité pour éviter un calcul redondant.</p>
+<h1 id="15-deuxième-boucle-de-vérification-home-assistant">15. Deuxième boucle de vérification : Home Assistant</h1>
+<ul>
+<li><input disabled="" type="checkbox"> appareil <code>Boiler Etage</code> visible dans l’intégration Shelly ;</li>
+<li><input disabled="" type="checkbox"> commande ON/OFF fonctionnelle ;</li>
+<li><input disabled="" type="checkbox"> puissance proche de 0 W lorsque le relais est OFF ;</li>
+<li><input disabled="" type="checkbox"> puissance de plusieurs kilowatts pendant une chauffe réelle ;</li>
+<li><input disabled="" type="checkbox"> énergie totale croissante ;</li>
+<li><input disabled="" type="checkbox"> entité de température interne activée, si souhaité ;</li>
+<li><input disabled="" type="checkbox"> fuseau <code>Europe/Brussels</code> ;</li>
+<li><input disabled="" type="checkbox"> allumage automatique à 11:00 et 22:00 ;</li>
+<li><input disabled="" type="checkbox"> coupure automatique à 07:00 et 17:00 ;</li>
+<li><input disabled="" type="checkbox"> allumage manuel hors heures creuses immédiatement annulé ;</li>
+<li><input disabled="" type="checkbox"> traces de l’automatisation sans erreur ;</li>
+<li><input disabled="" type="checkbox"> courbe visible dans l’historique et le tableau Énergie.</li>
+</ul>
+<h1 id="16-dépannage">16. Dépannage</h1>
+<table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause probable</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Environ 2 W seulement</td>
+<td>Bobine d’un contacteur sur <code>O</code></td>
+<td>Le boiler doit être directement derrière <code>O</code> pour être mesuré</td>
+</tr>
+<tr>
+<td>Relais ON, 0 W</td>
+<td>Eau chaude, thermostat satisfait</td>
+<td>Vérifier après consommation d’eau chaude</td>
+</tr>
+<tr>
+<td>Relais ON, 0 W en permanence</td>
+<td>Mauvais câblage, sécurité thermique, résistance</td>
+<td>Couper et faire diagnostiquer</td>
+</tr>
+<tr>
+<td>Shelly indisponible</td>
+<td>Wi‑Fi faible, IP modifiée</td>
+<td>Réserver l’IP, vérifier le signal</td>
+</tr>
+<tr>
+<td>L’automatisation ne démarre pas</td>
+<td>Mauvais entity_id</td>
+<td>Copier l’identifiant réel dans Outils de développement</td>
+</tr>
+<tr>
+<td>Mauvais horaires</td>
+<td>Fuseau incorrect</td>
+<td>Régler <code>Europe/Brussels</code></td>
+</tr>
+<tr>
+<td>Le boiler s’allume hors HC</td>
+<td>Autre automatisation ou horaire Shelly natif</td>
+<td>Désactiver les schedules/timers concurrents</td>
+</tr>
+<tr>
+<td>Le boiler ne repart pas après coupure</td>
+<td>Action au démarrage OFF et HA non synchronisé</td>
+<td>Vérifier le trigger de retour depuis <code>unavailable</code></td>
+</tr>
+<tr>
+<td>Puissance anormalement haute</td>
+<td>Tension élevée ou défaut</td>
+<td>Couper, mesurer et faire contrôler</td>
+</tr>
+<tr>
+<td>Shelly trop chaud</td>
+<td>Coffret chaud, mauvais serrage, mousse, surcharge</td>
+<td>Couper immédiatement et corriger l’installation</td>
+</tr>
+<tr>
+<td>Énergie absente du dashboard</td>
+<td>Mauvaise classe/statistique</td>
+<td>Choisir l’entité d’énergie native compatible</td>
+</tr>
+</tbody></table>
+<h1 id="17-fiabilisation-pour-une-installation-durable">17. Fiabilisation pour une installation durable</h1>
+<h2 id="électricité">Électricité</h2>
+<ul>
+<li>remplacer définitivement la protection C20/3 kA photographiée par une protection conforme aux exigences du module ;</li>
+<li>étiqueter <code>L1</code> et <code>L2</code> dans le coffret ;</li>
+<li>ajouter un avertissement : « 3×230 V sans neutre — L2 raccordée à N du Shelly » ;</li>
+<li>utiliser un coffret adapté plutôt que de laisser le module libre sur l’isolant ;</li>
+<li>contrôler le serrage après les premiers cycles ;</li>
+<li>contrôler la température pendant une journée chaude ;</li>
+<li>conserver l’accès au disjoncteur bipolaire.</li>
+</ul>
+<h2 id="réseau">Réseau</h2>
+<ul>
+<li>réserver l’adresse IP du Shelly ;</li>
+<li>utiliser un Wi‑Fi stable ;</li>
+<li>ne pas exposer directement l’interface locale à Internet ;</li>
+<li>protéger l’interface avec une authentification ;</li>
+<li>conserver le cloud désactivable sans affecter Home Assistant.</li>
+</ul>
+<h2 id="home-assistant">Home Assistant</h2>
+<ul>
+<li>éviter les automations concurrentes ;</li>
+<li>nommer clairement les entités ;</li>
+<li>sauvegarder les fichiers YAML ;</li>
+<li>vérifier les traces après chaque mise à jour majeure ;</li>
+<li>documenter la date et la source des plages horaires ;</li>
+<li>revoir l’automatisation si la tarification wallonne évolue après 2026.</li>
+</ul>
+<h1 id="18-température-de-leau-ce-qui-est-disponible-et-ce-qui-ne-lest-pas">18. Température de l’eau : ce qui est disponible et ce qui ne l’est pas</h1>
+<p>Le boiler possède son thermostat et sa sécurité thermique, mais leur mesure n’est pas exposée à Home Assistant. Le Shelly remonte :</p>
+<ul>
+<li>l’état du relais ;</li>
+<li>la puissance ;</li>
+<li>l’énergie ;</li>
+<li>la tension, le courant et la fréquence selon les entités ;</li>
+<li>sa propre température interne.</li>
+</ul>
+<p>La puissance permet de savoir si le boiler chauffe, mais pas de connaître précisément la température de l’eau.</p>
+<p>Le Shelly 1PM Gen4 dispose d’une interface pour add-on et sa documentation prévoit une sonde DS18B20 avec l’add-on compatible. Une sonde ne doit jamais être introduite dans la cuve sans emplacement prévu par le constructeur. La solution non invasive consiste à mesurer la température sur le tuyau de sortie, sous une isolation thermique ; cette valeur reste une approximation et dépend du débit.</p>
+<h1 id="19-références-officielles">19. Références officielles</h1>
+<ol>
+<li>Shelly Knowledge Base — Shelly 1PM Gen4 : caractéristiques, sortie mesurée <code>O</code>, charge résistive, 16 A, protection externe, température et câblage.<br><a href="https://kb.shelly.cloud/knowledge-base/shelly-1pm-gen4">https://kb.shelly.cloud/knowledge-base/shelly-1pm-gen4</a></li>
+<li>Shelly Knowledge Base — interface web du 1PM Gen4 : Wi‑Fi, action au démarrage, protections, schedules et add-on DS18B20.<br><a href="https://kb.shelly.cloud/knowledge-base/shelly-1pm-gen4-web-interface-guide">https://kb.shelly.cloud/knowledge-base/shelly-1pm-gen4-web-interface-guide</a></li>
+<li>Home Assistant — intégration Shelly : découverte, ajout manuel, communication RPC locale et entités Gen2+.<br><a href="https://www.home-assistant.io/integrations/shelly/">https://www.home-assistant.io/integrations/shelly/</a></li>
+<li>Home Assistant — déclencheurs d’automatisation.<br><a href="https://www.home-assistant.io/docs/automation/trigger/">https://www.home-assistant.io/docs/automation/trigger/</a></li>
+<li>Home Assistant — consommation des appareils individuels dans le tableau Énergie.<br><a href="https://www.home-assistant.io/docs/energy/individual-devices/">https://www.home-assistant.io/docs/energy/individual-devices/</a></li>
+<li>ORES — nouvelles plages du tarif bihoraire depuis le 1er janvier 2026.<br><a href="https://www.ores.be/comprendre-ma-facture/bihoraire/">https://www.ores.be/comprendre-ma-facture/bihoraire/</a></li>
+</ol>
+
+<section class="qa" aria-label="Questions">
+<h2 class="qa-title">Questions</h2>
+<p class="qa-intro">Une question sur ce montage&nbsp;? Laissez-la ci-dessous — pas besoin de compte, juste un nom. J'y réponds directement.</p>
+<div id="cusdis_thread" data-page-id="shelly-boiler" data-page-title="Piloter un boiler Atlantic avec un Shelly 1PM Gen4 et Home Assistant" data-theme="light"></div>
+</section>
+<script src="/assets/comments.js?v=2" defer></script>
+<hr />
+<p><strong>Voir aussi&nbsp;:</strong> <a href="/syclope-hydrotouch">Syclope HydroTouch dans Home Assistant</a> · <a href="/">toutes les publications</a>.</p>
+</main>
+</body>
+</html>

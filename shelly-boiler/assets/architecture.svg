@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="620" viewBox="0 0 1500 620">
+  <defs>
+    <style>
+      .title{font:700 34px Arial,sans-serif;fill:#17202a}
+      .h{font:700 23px Arial,sans-serif;fill:#17202a}
+      .t{font:18px Arial,sans-serif;fill:#34495e}
+      .box{fill:#f8f9fa;stroke:#34495e;stroke-width:3;rx:20}
+      .arrow{stroke:#2471a3;stroke-width:6;fill:none;marker-end:url(#a)}
+      .power{stroke:#d62728;stroke-width:7;fill:none;marker-end:url(#r)}
+    </style>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2471a3"/></marker>
+    <marker id="r" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#d62728"/></marker>
+  </defs>
+  <text x="750" y="55" text-anchor="middle" class="title">Architecture de l’intégration</text>
+  <rect x="40" y="150" width="250" height="220" class="box"/>
+  <text x="165" y="205" text-anchor="middle" class="h">Réseau 3×230 V</text>
+  <text x="165" y="250" text-anchor="middle" class="t">Disjoncteur 2P C16</text>
+  <text x="165" y="285" text-anchor="middle" class="t">L1 + L2 + PE</text>
+
+  <rect x="390" y="125" width="290" height="270" rx="24" fill="#e74c3c" stroke="#922b21" stroke-width="4"/>
+  <text x="535" y="190" text-anchor="middle" class="h" fill="#fff">Shelly 1PM Gen4</text>
+  <text x="535" y="235" text-anchor="middle" class="t" fill="#fff">Commande du relais</text>
+  <text x="535" y="270" text-anchor="middle" class="t" fill="#fff">Mesure W / kWh</text>
+  <text x="535" y="305" text-anchor="middle" class="t" fill="#fff">Wi‑Fi local</text>
+  <text x="535" y="340" text-anchor="middle" class="t" fill="#fff">SW non utilisé</text>
+
+  <rect x="790" y="150" width="250" height="220" class="box"/>
+  <text x="915" y="205" text-anchor="middle" class="h">Boiler Atlantic</text>
+  <text x="915" y="250" text-anchor="middle" class="t">200 L — 2200 W</text>
+  <text x="915" y="285" text-anchor="middle" class="t">Thermostat interne</text>
+
+  <rect x="1170" y="90" width="285" height="310" class="box"/>
+  <text x="1312" y="150" text-anchor="middle" class="h">Home Assistant</text>
+  <text x="1312" y="198" text-anchor="middle" class="t">Intégration Shelly locale</text>
+  <text x="1312" y="235" text-anchor="middle" class="t">Automatisation HC 2026</text>
+  <text x="1312" y="272" text-anchor="middle" class="t">11–17 h / 22–7 h</text>
+  <text x="1312" y="309" text-anchor="middle" class="t">Dashboard &amp; historique</text>
+  <text x="1312" y="346" text-anchor="middle" class="t">Energy Dashboard</text>
+
+  <path d="M290 260 H390" class="power"/><text x="340" y="238" text-anchor="middle" class="t" fill="#d62728">230 V</text>
+  <path d="M680 260 H790" class="power"/><text x="735" y="238" text-anchor="middle" class="t" fill="#d62728">O mesurée</text>
+  <path d="M680 170 C850 40 1080 40 1170 170" class="arrow"/>
+  <text x="930" y="70" text-anchor="middle" class="t" fill="#2471a3">Wi‑Fi / RPC local</text>
+  <path d="M1170 330 C1060 515 720 515 600 395" class="arrow"/>
+  <text x="920" y="535" text-anchor="middle" class="t" fill="#2471a3">switch.turn_on / switch.turn_off</text>
+</svg>

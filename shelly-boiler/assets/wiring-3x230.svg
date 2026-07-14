@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860">
+  <defs>
+    <style>
+      .title{font:700 34px Arial,sans-serif;fill:#17202a}
+      .h{font:700 24px Arial,sans-serif;fill:#17202a}
+      .t{font:20px Arial,sans-serif;fill:#17202a}
+      .small{font:17px Arial,sans-serif;fill:#34495e}
+      .box{fill:#f8f9fa;stroke:#34495e;stroke-width:3;rx:18}
+      .warn{fill:#fff3cd;stroke:#b58105;stroke-width:3;rx:14}
+      .l1{stroke:#d62728;stroke-width:9;fill:none}
+      .l2{stroke:#6f4e37;stroke-width:9;fill:none}
+      .pe{stroke:#2ca02c;stroke-width:9;fill:none;stroke-dasharray:18 10}
+      .sw{stroke:#7f8c8d;stroke-width:5;fill:none;stroke-dasharray:9 9}
+      .node{fill:#fff;stroke:#17202a;stroke-width:3}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#17202a"/>
+    </marker>
+  </defs>
+  <text x="700" y="55" text-anchor="middle" class="title">Shelly 1PM Gen4 + boiler Atlantic — 3×230 V sans neutre</text>
+  <text x="700" y="90" text-anchor="middle" class="small">Montage final sans contacteur : le courant du boiler traverse O pour être mesuré</text>
+
+  <rect x="55" y="155" width="270" height="420" class="box"/>
+  <text x="190" y="200" text-anchor="middle" class="h">TABLEAU</text>
+  <rect x="95" y="245" width="190" height="125" class="box"/>
+  <text x="190" y="285" text-anchor="middle" class="t">Disjoncteur 2P</text>
+  <text x="190" y="320" text-anchor="middle" class="h">C16 — ≥ 6 kA</text>
+  <text x="190" y="350" text-anchor="middle" class="small">courbe B ou C</text>
+  <circle cx="280" cy="420" r="12" class="node"/>
+  <circle cx="280" cy="500" r="12" class="node"/>
+  <text x="105" y="427" class="h" fill="#d62728">L1</text>
+  <text x="105" y="507" class="h" fill="#6f4e37">L2</text>
+  <text x="105" y="550" class="h" fill="#2ca02c">PE</text>
+
+  <rect x="500" y="150" width="390" height="450" rx="28" fill="#e74c3c" stroke="#922b21" stroke-width="4"/>
+  <text x="695" y="205" text-anchor="middle" class="h" fill="#fff">Shelly 1PM Gen4</text>
+  <text x="695" y="238" text-anchor="middle" class="small" fill="#fff">SW reste vide</text>
+
+  <circle cx="550" cy="315" r="22" class="node"/><text x="550" y="322" text-anchor="middle" class="h">O</text>
+  <circle cx="630" cy="315" r="22" class="node"/><text x="630" y="322" text-anchor="middle" class="t">SW</text>
+  <circle cx="715" cy="315" r="22" class="node"/><text x="715" y="322" text-anchor="middle" class="h">L</text>
+  <circle cx="805" cy="315" r="22" class="node"/><text x="805" y="322" text-anchor="middle" class="h">N</text>
+
+  <text x="695" y="390" text-anchor="middle" class="t" fill="#fff">Mesure du courant uniquement</text>
+  <text x="695" y="424" text-anchor="middle" class="h" fill="#fff">sur la sortie O</text>
+  <text x="695" y="475" text-anchor="middle" class="t" fill="#fff">L = L1</text>
+  <text x="695" y="510" text-anchor="middle" class="t" fill="#fff">N = retour L2 actif</text>
+  <text x="695" y="545" text-anchor="middle" class="small" fill="#fff">Il n’y a aucun neutre dans ce montage</text>
+
+  <rect x="1060" y="165" width="285" height="410" class="box"/>
+  <text x="1202" y="210" text-anchor="middle" class="h">BOILER ATLANTIC</text>
+  <text x="1202" y="250" text-anchor="middle" class="t">200 L — 2200 W</text>
+  <text x="1202" y="282" text-anchor="middle" class="t">230 V monophasé</text>
+  <rect x="1115" y="345" width="175" height="110" rx="55" fill="#d6eaf8" stroke="#2874a6" stroke-width="4"/>
+  <path d="M1140 418 C1165 370 1190 455 1215 400 C1240 350 1265 440 1280 385" stroke="#d62728" stroke-width="5" fill="none"/>
+  <text x="1202" y="505" text-anchor="middle" class="small">Thermostat et sécurité</text>
+  <text x="1202" y="532" text-anchor="middle" class="small">internes conservés</text>
+
+  <!-- L1: breaker -> Shelly L -->
+  <path d="M292 420 H430 V315 H693" class="l1"/>
+  <text x="365" y="398" class="small" fill="#d62728">L1 tableau</text>
+
+  <!-- O -> boiler -->
+  <path d="M528 315 H455 V650 H1015 V330 H1060" class="l1"/>
+  <text x="690" y="680" text-anchor="middle" class="small" fill="#d62728">L1 commutée et mesurée : O → phase boiler</text>
+
+  <!-- L2 breaker -> N and boiler -->
+  <path d="M292 500 H390 V760 H980 V530 H1060" class="l2"/>
+  <path d="M390 500 H805 V337" class="l2"/>
+  <text x="505" y="738" class="small" fill="#6f4e37">L2 directe vers le boiler</text>
+  <text x="420" y="478" class="small" fill="#6f4e37">L2 vers borne N du Shelly</text>
+
+  <!-- SW empty -->
+  <path d="M630 337 V385" class="sw"/>
+  <text x="630" y="414" text-anchor="middle" class="small">vide</text>
+
+  <!-- PE -->
+  <path d="M280 550 H1010 V555 H1060" class="pe"/>
+  <text x="700" y="582" text-anchor="middle" class="small" fill="#2ca02c">Terre directe, jamais commutée</text>
+
+  <rect x="55" y="720" width="1290" height="105" class="warn"/>
+  <text x="80" y="755" class="h">⚠ Point essentiel</text>
+  <text x="80" y="790" class="t">Shelly OFF ne signifie pas absence de tension : L2 reste active au boiler. Pour intervenir, couper le disjoncteur bipolaire et vérifier l’absence de tension.</text>
+</svg>
