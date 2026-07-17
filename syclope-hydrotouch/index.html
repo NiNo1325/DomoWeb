@@ -122,7 +122,7 @@
 <h1 class="title">Syclope HydroTouch CHY0444 dans Home Assistant</h1>
 <p class="subtitle">Guide complet : alimentation, RS485, Waveshare
 Ethernet, rétro‑ingénierie Modbus et dashboard Mushroom</p>
-<p class="date">11 juillet 2026 —  1.1</p>
+<p class="date">Nicolas · 11 juillet 2026 · version 1.1</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -279,14 +279,6 @@ RS232/485/422 TO POE ETH (B)</strong>, puis intégré nativement dans
 Les deux mesures finales ont été vérifiées simultanément sur l’écran du
 Syclope et par lecture logicielle : <strong>pH ≈ 7,17</strong> et
 <strong>Redox ≈ 882 mV</strong>.</p>
-</blockquote>
-<blockquote>
-<p><strong> .</strong> Les adresses IP
-visibles sont des exemples, les adresses MAC et identifiants matériels
-ont été masqués, et aucune donnée d’authentification n’est publiée.
-Matériel testé : <strong>Syclope CHY0444</strong> et <strong>Waveshare
-firmware V1.452</strong> ; validation réalisée le <strong>11 juillet
-2026</strong>.</p>
 </blockquote>
 <h1 id="résultat-final">1. Résultat final</h1>
 <p>L’architecture obtenue est la suivante :</p>
@@ -670,9 +662,8 @@ donc voir un appareil qui n’est pas encore dans le même sous-réseau IP
 que le PC, alors que <code>arp -a</code> peut ne rien montrer.</p>
 <figure>
 <img src="/assets/15-vircom-detection.png"
-alt="Découverte dans VirCom — capture " />
-<figcaption aria-hidden="true">Découverte dans VirCom — capture
-</figcaption>
+alt="Découverte dans VirCom" />
+<figcaption aria-hidden="true">Découverte dans VirCom</figcaption>
 </figure>
 <h3 id="pourquoi-arp--a-nétait-pas-concluant">Pourquoi
 <code>arp -a</code> n’était pas concluant</h3>
@@ -688,7 +679,7 @@ l’entrée n’expire pas.</li>
 qu’il ait trouvé le Waveshare alors que la table ARP ne le révélait
 pas.</p>
 <h2 id="paramètres-réseau-validés">7.2 Paramètres réseau validés</h2>
-<p>Configuration d’exemple utilisée dans la  :</p>
+<p>Configuration d’exemple :</p>
 <blockquote>
 <p><strong>Adresses d’exemple.</strong> <code>192.168.1.200</code>,
 <code>192.168.1.1</code> et <code>192.168.1.50</code> sont utilisées
@@ -744,9 +735,8 @@ votre routeur.</p>
 </table>
 <figure>
 <img src="/assets/16-vircom-parametres.png"
-alt="Paramètres VirCom — capture " />
-<figcaption aria-hidden="true">Paramètres VirCom — capture
-</figcaption>
+alt="Paramètres VirCom" />
+<figcaption aria-hidden="true">Paramètres VirCom</figcaption>
 </figure>
 <blockquote>
 <p><strong>Attention au port 502.</strong> Dans cette configuration
@@ -759,9 +749,8 @@ personnalisée.</p>
 <p><code>http://192.168.1.200:502</code></p>
 <figure>
 <img src="/assets/17-waveshare-interface-web.png"
-alt="Interface web du Waveshare — capture " />
-<figcaption aria-hidden="true">Interface web du Waveshare — capture
-</figcaption>
+alt="Interface web du Waveshare" />
+<figcaption aria-hidden="true">Interface web du Waveshare</figcaption>
 </figure>
 <h2 id="paramètres-série">7.3 Paramètres série</h2>
 <table>
@@ -1513,7 +1502,7 @@ seule</a></li>
 <li><a href="/data/syclope_raw_20260711_091323.csv">CSV brut du
 scan</a></li>
 <li><a href="/data/syclope_report_20260711_093149.html">Rapport HTML de
-rétro-ingénierie </a></li>
+rétro-ingénierie</a></li>
 </ul>
 <h1 id="références">20. Références</h1>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
